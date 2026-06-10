@@ -222,6 +222,20 @@
   // Re-analyze when the user switches tabs while the panel stays open.
   chrome.tabs.onActivated.addListener(analyzePage);
 
+  // Re-analyze when the user NAVIGATES within the same tab — otherwise the
+  // panel keeps describing (and risk-rating!) the previous page. GitHub and
+  // similar apps navigate via pushState, which fires onUpdated with a `url`
+  // change but not always a fresh `status: complete`, so listen for both.
+  // The short delay lets the new page finish rendering before we read it.
+  let navTimer = null;
+  chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
+    if (!tab.active) return;
+    if (changeInfo.status === "complete" || changeInfo.url) {
+      clearTimeout(navTimer);
+      navTimer = setTimeout(analyzePage, 800);
+    }
+  });
+
   function truncate(s, max) {
     return s.length > max ? s.slice(0, max - 1) + "…" : s;
   }

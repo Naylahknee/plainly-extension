@@ -101,6 +101,7 @@
       this.termPattern.lastIndex = 0;
       let m;
       while ((m = this.termPattern.exec(text)) !== null) {
+        if (isFileLikeContext(text, m.index, m.index + m[0].length)) continue;
         const canonical = this.aliasIndex.get(m[0].toLowerCase());
         if (canonical) {
           results.push({ match: m[0], term: canonical, index: m.index });
@@ -189,7 +190,8 @@
       if (!this.ready || !text) return text;
       this.termPattern.lastIndex = 0;
       const explained = new Set(); // gloss each unique term once
-      return text.replace(this.termPattern, (match) => {
+      return text.replace(this.termPattern, (match, _group, offset) => {
+        if (isFileLikeContext(text, offset, offset + match.length)) return match;
         const found = this.lookup(match);
         if (!found || explained.has(found.term)) return match;
         explained.add(found.term);
@@ -207,12 +209,31 @@
     rewrite(text) {
       if (!this.ready || !text) return text;
       this.termPattern.lastIndex = 0;
-      return text.replace(this.termPattern, (match) => {
+      return text.replace(this.termPattern, (match, _group, offset) => {
+        if (isFileLikeContext(text, offset, offset + match.length)) return match;
         const found = this.lookup(match);
         return found ? found.entry.simple : match;
       });
     },
   };
+
+  /**
+   * True when a match sits inside a filename, path, or identifier —
+   * e.g. the "json" in "tsconfig.base.json", or "branch" in
+   * "feature-branch". Translating those mangles names users need intact.
+   *
+   * The rule: a separator (. / \ _ -) directly touching the match counts
+   * only if a word character sits on the separator's far side. That way
+   * an ordinary sentence-ending period ("…ready to deploy.") still
+   * translates fine.
+   */
+  function isFileLikeContext(text, start, end) {
+    const sep = (c) => c === "." || c === "/" || c === "\\" || c === "_" || c === "-";
+    const word = (c) => !!c && /\w/.test(c);
+    if (sep(text[start - 1]) && word(text[start - 2])) return true;
+    if (sep(text[end]) && word(text[end + 1])) return true;
+    return false;
+  }
 
   /** Capitalize the first letter of a phrase. */
   function capitalize(s) {

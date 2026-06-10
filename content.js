@@ -33,8 +33,12 @@
   const SKIP_SELECTOR = [
     "script", "style", "noscript", "svg", "canvas", "video", "audio",
     "input", "textarea", "select", "option",
-    "[contenteditable]", "[contenteditable] *",
+    "[contenteditable]",
     "code", "pre", "kbd", "samp",            // leave real code untouched
+    // Search boxes, autocomplete dropdowns, and ARIA text widgets:
+    // rewriting a user's query or its suggestions changes their meaning.
+    "[role='combobox']", "[role='listbox']", "[role='option']",
+    "[role='searchbox']", "[role='textbox']",
     `.${TERM_CLASS}`, "#plainly-tooltip",     // never re-process our own UI
   ].join(",");
 
@@ -267,13 +271,17 @@
       // We harvest ONLY structure: title, headings, button labels, and a
       // short body sample. No form values, nothing typed by the user.
       case "PLAINLY_GET_PAGE_INFO": {
-        const headings = [...document.querySelectorAll("h1, h2, h3")]
+        // Harvest from <main> when the page has one — header/nav buttons
+        // like "Search" or "Give feedback" aren't what the page is about.
+        const scope = document.querySelector("main") || document.body;
+
+        const headings = [...scope.querySelectorAll("h1, h2, h3")]
           .slice(0, 12)
           .map((h) => h.textContent.trim())
           .filter(Boolean);
 
         const buttons = [
-          ...document.querySelectorAll(
+          ...scope.querySelectorAll(
             "button, a.btn, [role='button'], input[type='submit']"
           ),
         ]
@@ -281,7 +289,7 @@
           .map((b) => (b.textContent || b.value || "").trim())
           .filter((t) => t && t.length < 40);
 
-        const bodySample = (document.body.innerText || "").slice(0, 4000);
+        const bodySample = (scope.innerText || "").slice(0, 4000);
 
         sendResponse({
           ok: true,
