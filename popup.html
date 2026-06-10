@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plainly</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<!-- The body class scopes popup styles inside the shared stylesheet -->
+<body class="plainly-popup">
+
+  <!-- ============ HEADER: identity + master switch ============ -->
+  <header class="popup-header">
+    <div class="popup-brand">
+      <span class="popup-logo" aria-hidden="true"></span>
+      <div>
+        <h1 class="popup-title">Plainly</h1>
+        <p class="popup-subtitle">Tech, in plain English</p>
+      </div>
+    </div>
+
+    <!-- Master ON/OFF toggle -->
+    <label class="switch" for="toggle-enabled">
+      <span class="visually-hidden">Plainly on or off</span>
+      <input type="checkbox" id="toggle-enabled" role="switch" />
+      <span class="switch-track" aria-hidden="true"></span>
+    </label>
+  </header>
+
+  <!-- Status line gives quiet feedback after actions -->
+  <p id="status-line" class="popup-status" role="status">Plainly is on for this site.</p>
+
+  <!-- ============ PRIMARY ACTIONS ============ -->
+  <nav class="popup-actions" aria-label="Plainly actions">
+    <button id="btn-translate-page" class="action-btn">
+      <span class="action-icon" aria-hidden="true">¶</span>
+      <span class="action-text">
+        <span class="action-label">Translate this page</span>
+        <span class="action-hint">Underline jargon with plain-English tooltips</span>
+      </span>
+    </button>
+
+    <button id="btn-explain-selection" class="action-btn">
+      <span class="action-icon" aria-hidden="true">❝</span>
+      <span class="action-text">
+        <span class="action-label">Explain selected text</span>
+        <span class="action-hint">Highlight text on the page first</span>
+      </span>
+    </button>
+
+    <button id="btn-glossary" class="action-btn">
+      <span class="action-icon" aria-hidden="true">≡</span>
+      <span class="action-text">
+        <span class="action-label">Show glossary</span>
+        <span class="action-hint">Every term Plainly knows</span>
+      </span>
+    </button>
+
+    <button id="btn-side-panel" class="action-btn">
+      <span class="action-icon" aria-hidden="true">▤</span>
+      <span class="action-text">
+        <span class="action-label">Open side panel</span>
+        <span class="action-hint">Page summary, next steps &amp; risk level</span>
+      </span>
+    </button>
+  </nav>
+
+  <!-- ============ GLOSSARY (collapsible, filled by popup.js) ============ -->
+  <section id="glossary-section" class="popup-section" hidden>
+    <h2 class="section-heading">Glossary</h2>
+    <input
+      type="search"
+      id="glossary-search"
+      class="glossary-search"
+      placeholder="Search a term…"
+      aria-label="Search glossary terms"
+    />
+    <ul id="glossary-list" class="glossary-list"></ul>
+  </section>
+
+  <!-- ============ SETTINGS (collapsible) ============ -->
+  <details class="popup-settings">
+    <summary class="section-heading">Settings</summary>
+
+    <div class="setting-row">
+      <label for="mode-select" class="setting-label">Explanation style</label>
+      <select id="mode-select" class="setting-select">
+        <option value="beginner">Beginner — plainest possible</option>
+        <option value="business">Business owner — outcomes &amp; impact</option>
+        <option value="creator">Creator — publishing focus</option>
+        <option value="adhd">ADHD — short, clear chunks</option>
+        <option value="devlite">Developer lite — keep some terms</option>
+      </select>
+    </div>
+
+    <div class="setting-row setting-row-inline">
+      <label for="toggle-replace" class="setting-label">
+        Replace jargon inline
+        <span class="setting-hint">Rewrites terms in place instead of underlining</span>
+      </label>
+      <input type="checkbox" id="toggle-replace" />
+    </div>
+
+    <!-- Required privacy statement -->
+    <p class="privacy-note">
+      <strong>Your privacy:</strong> We only translate text you interact with.
+      We do not sell browsing data. Translation happens locally in your
+      browser using Plainly's built-in glossary.
+    </p>
+  </details>
+
+  <script src="services/storageService.js"></script>
+  <script src="services/glossaryService.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

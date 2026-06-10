@@ -1,0 +1,532 @@
+/* ======================================================================
+   Plainly — styles.css
+   ----------------------------------------------------------------------
+   One stylesheet, three contexts:
+
+     1. CONTENT STYLES  (.plainly-term, #plainly-tooltip)
+        Injected into web pages. Every selector is prefixed with
+        "plainly-" so we can never collide with host page styles.
+
+     2. POPUP STYLES    (scoped under body.plainly-popup)
+
+     3. SIDE PANEL      (scoped under body.plainly-panel)
+
+   Design language: calm, minimal, soft contrast, generous spacing,
+   readable for neurodivergent users. No neon, no hacker vibes.
+   ====================================================================== */
+
+/* ---------- shared design tokens ---------- */
+:root {
+  --plainly-ink: #2b2b33;          /* main text — soft near-black */
+  --plainly-ink-soft: #5b5b66;     /* secondary text */
+  --plainly-paper: #fdfdfb;        /* warm off-white background */
+  --plainly-card: #ffffff;
+  --plainly-accent: #5b6ee1;       /* calm periwinkle-indigo */
+  --plainly-accent-soft: #eef0fc;
+  --plainly-underline: #8a97e8;
+  --plainly-border: #e6e6ee;
+  --plainly-green: #3e8e6b;
+  --plainly-green-soft: #e7f4ee;
+  --plainly-amber: #a3702a;
+  --plainly-amber-soft: #faf1e1;
+  --plainly-red: #b3514f;
+  --plainly-red-soft: #fbeceb;
+  --plainly-radius: 12px;
+  --plainly-shadow: 0 6px 24px rgba(43, 43, 51, 0.12);
+  --plainly-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --plainly-ink: #ececf1;
+    --plainly-ink-soft: #a7a7b3;
+    --plainly-paper: #1d1d24;
+    --plainly-card: #26262f;
+    --plainly-accent: #8a97e8;
+    --plainly-accent-soft: #2c2f45;
+    --plainly-underline: #6c7ade;
+    --plainly-border: #3a3a46;
+    --plainly-green-soft: #233830;
+    --plainly-amber-soft: #3a3023;
+    --plainly-red-soft: #3c2828;
+    --plainly-green: #7cc4a4;
+    --plainly-amber: #d9ab66;
+    --plainly-red: #e09290;
+    --plainly-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* ======================================================================
+   1. CONTENT STYLES — highlights & tooltip injected into web pages
+   ====================================================================== */
+
+/* A highlighted jargon term: gentle dotted underline, nothing flashy.
+   Inherits the page's own font & size so layout never shifts. */
+.plainly-term {
+  cursor: help;
+  text-decoration: underline dotted var(--plainly-underline) 1.5px;
+  text-underline-offset: 3px;
+  border-radius: 3px;
+  transition: background-color 120ms ease;
+}
+
+.plainly-term:hover,
+.plainly-term:focus-visible {
+  background-color: var(--plainly-accent-soft);
+  outline: none;
+}
+
+.plainly-term:focus-visible {
+  box-shadow: 0 0 0 2px var(--plainly-accent);
+}
+
+/* Replace-mode terms read differently, so mark them subtly. */
+.plainly-term-replaced {
+  font-style: italic;
+  text-decoration-style: dashed;
+}
+
+/* The floating tooltip — one element, repositioned per term. */
+#plainly-tooltip {
+  position: fixed;
+  z-index: 2147483647;            /* above everything on the host page */
+  max-width: 320px;
+  padding: 14px 16px;
+  background: var(--plainly-card);
+  color: var(--plainly-ink);
+  border: 1px solid var(--plainly-border);
+  border-radius: var(--plainly-radius);
+  box-shadow: var(--plainly-shadow);
+  font-family: var(--plainly-font);
+  font-size: 13.5px;
+  line-height: 1.55;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+#plainly-tooltip.plainly-tooltip-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;            /* allow selecting/copying the text */
+}
+
+.plainly-tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.plainly-tooltip-term {
+  font-weight: 650;
+  font-size: 14px;
+  color: var(--plainly-accent);
+}
+
+.plainly-risk {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+.plainly-risk-high   { background: var(--plainly-red-soft);   color: var(--plainly-red); }
+.plainly-risk-medium { background: var(--plainly-amber-soft); color: var(--plainly-amber); }
+
+#plainly-tooltip p { margin: 0 0 8px; }
+#plainly-tooltip p:last-of-type { margin-bottom: 0; }
+
+.plainly-tooltip-why,
+.plainly-tooltip-next {
+  color: var(--plainly-ink-soft);
+  font-size: 12.5px;
+}
+
+.plainly-tooltip-footer {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--plainly-border);
+  font-size: 11px;
+  color: var(--plainly-ink-soft);
+}
+
+/* ======================================================================
+   2. POPUP STYLES — scoped under body.plainly-popup
+   ====================================================================== */
+
+body.plainly-popup {
+  width: 340px;
+  margin: 0;
+  padding: 16px;
+  background: var(--plainly-paper);
+  color: var(--plainly-ink);
+  font-family: var(--plainly-font);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Shared logo dot — a calm gradient circle. */
+.popup-logo {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--plainly-accent), #7fb6a4);
+  flex: none;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.popup-brand { display: flex; align-items: center; gap: 10px; }
+
+.popup-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.popup-subtitle,
+.panel-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: var(--plainly-ink-soft);
+}
+
+.popup-status {
+  margin: 6px 0 14px;
+  font-size: 12.5px;
+  color: var(--plainly-ink-soft);
+  min-height: 1.4em;
+}
+
+/* ---------- the ON/OFF switch ---------- */
+.switch { position: relative; display: inline-block; cursor: pointer; }
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+.switch-track {
+  display: block;
+  width: 44px;
+  height: 26px;
+  border-radius: 99px;
+  background: var(--plainly-border);
+  transition: background 160ms ease;
+}
+.switch-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--plainly-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 160ms ease;
+}
+.switch input:checked + .switch-track { background: var(--plainly-accent); }
+.switch input:checked + .switch-track::after { transform: translateX(18px); }
+.switch input:focus-visible + .switch-track {
+  box-shadow: 0 0 0 2px var(--plainly-paper), 0 0 0 4px var(--plainly-accent);
+}
+
+/* ---------- primary action buttons ---------- */
+.popup-actions { display: grid; gap: 8px; }
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  background: var(--plainly-card);
+  border: 1px solid var(--plainly-border);
+  border-radius: var(--plainly-radius);
+  color: var(--plainly-ink);
+  font-family: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.action-btn:hover { border-color: var(--plainly-accent); background: var(--plainly-accent-soft); }
+.action-btn:focus-visible { outline: 2px solid var(--plainly-accent); outline-offset: 2px; }
+
+.action-icon {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--plainly-accent-soft);
+  color: var(--plainly-accent);
+  font-size: 14px;
+}
+
+.action-text { display: flex; flex-direction: column; gap: 1px; }
+.action-label { font-weight: 600; }
+.action-hint { font-size: 11.5px; color: var(--plainly-ink-soft); }
+
+/* ---------- glossary browser ---------- */
+.popup-section { margin-top: 14px; }
+
+.section-heading {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  cursor: pointer;
+}
+
+.glossary-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border: 1px solid var(--plainly-border);
+  border-radius: 8px;
+  background: var(--plainly-card);
+  color: var(--plainly-ink);
+  font-family: inherit;
+  font-size: 13px;
+}
+.glossary-search:focus-visible { outline: 2px solid var(--plainly-accent); }
+
+.glossary-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  display: grid;
+  gap: 6px;
+}
+
+.glossary-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+  background: var(--plainly-card);
+  border: 1px solid var(--plainly-border);
+  border-radius: 8px;
+}
+.glossary-term { font-weight: 600; font-size: 13px; text-transform: capitalize; }
+.glossary-meaning { font-size: 12px; color: var(--plainly-ink-soft); }
+.glossary-empty { color: var(--plainly-ink-soft); font-size: 12.5px; }
+
+/* ---------- settings ---------- */
+.popup-settings { margin-top: 14px; }
+.popup-settings summary { list-style-position: inside; }
+
+.setting-row { margin: 10px 0; display: grid; gap: 4px; }
+.setting-row-inline {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+.setting-label { font-size: 13px; font-weight: 600; display: grid; gap: 2px; }
+.setting-hint { font-size: 11.5px; font-weight: 400; color: var(--plainly-ink-soft); }
+
+.setting-select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--plainly-border);
+  border-radius: 8px;
+  background: var(--plainly-card);
+  color: var(--plainly-ink);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.privacy-note {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  background: var(--plainly-green-soft);
+  color: var(--plainly-ink);
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* screen-reader-only helper */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ======================================================================
+   3. SIDE PANEL STYLES — scoped under body.plainly-panel
+   ====================================================================== */
+
+body.plainly-panel {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--plainly-paper);
+  color: var(--plainly-ink);
+  font-family: var(--plainly-font);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  border-bottom: 1px solid var(--plainly-border);
+  position: sticky;
+  top: 0;
+  background: var(--plainly-paper);
+  z-index: 1;
+}
+
+.panel-title { margin: 0; font-size: 16px; font-weight: 700; }
+
+.ghost-btn {
+  margin-left: auto;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid var(--plainly-border);
+  border-radius: 8px;
+  color: var(--plainly-ink-soft);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.ghost-btn:hover { border-color: var(--plainly-accent); color: var(--plainly-accent); }
+
+.panel-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px 20px;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.panel-card {
+  background: var(--plainly-card);
+  border: 1px solid var(--plainly-border);
+  border-radius: var(--plainly-radius);
+  padding: 14px 16px;
+}
+
+.card-heading {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0;
+  cursor: pointer;
+}
+section.panel-card .card-heading { cursor: default; }
+
+.card-body { margin: 10px 0 0; font-size: 13.5px; }
+
+.count-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 99px;
+  background: var(--plainly-accent-soft);
+  color: var(--plainly-accent);
+  font-size: 11px;
+}
+
+.term-list { list-style: none; padding: 0; display: grid; gap: 6px; }
+.term-list li { font-size: 13px; }
+.term-list strong { text-transform: capitalize; }
+
+.steps-list { padding-left: 20px; display: grid; gap: 6px; }
+.steps-list li { font-size: 13.5px; }
+
+/* risk pill colors */
+.risk-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  margin-right: 8px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: var(--plainly-border);
+}
+.risk-low    { background: var(--plainly-green-soft); color: var(--plainly-green); }
+.risk-medium { background: var(--plainly-amber-soft); color: var(--plainly-amber); }
+.risk-high   { background: var(--plainly-red-soft);   color: var(--plainly-red); }
+
+/* selection translation block */
+.selection-quote {
+  margin: 10px 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--plainly-accent);
+  background: var(--plainly-accent-soft);
+  border-radius: 0 8px 8px 0;
+  font-size: 13px;
+  color: var(--plainly-ink-soft);
+}
+
+.selection-result { margin: 0; }
+.selection-result dt {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--plainly-accent);
+  margin-top: 10px;
+}
+.selection-result dd { margin: 4px 0 0; font-size: 13.5px; }
+
+.copy-btn {
+  margin-top: 12px;
+  padding: 9px 14px;
+  background: var(--plainly-accent);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 120ms ease;
+}
+.copy-btn:hover { filter: brightness(1.08); }
+.copy-btn:focus-visible { outline: 2px solid var(--plainly-ink); outline-offset: 2px; }
+.copy-btn-wide { width: 100%; }
+
+.panel-note {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--plainly-ink-soft);
+  min-height: 1.2em;
+}
+
+.panel-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--plainly-border);
+  font-size: 11.5px;
+  color: var(--plainly-ink-soft);
+  text-align: center;
+}
+
+/* gentle motion everywhere; none at all if the user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

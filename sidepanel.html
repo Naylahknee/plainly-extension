@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plainly — Page Explainer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<!-- The body class scopes side-panel styles inside the shared stylesheet -->
+<body class="plainly-panel">
+
+  <header class="panel-header">
+    <span class="popup-logo" aria-hidden="true"></span>
+    <div>
+      <h1 class="panel-title">Plainly</h1>
+      <p class="panel-subtitle">What this page means, in plain English</p>
+    </div>
+    <button id="btn-refresh" class="ghost-btn" title="Re-read the page">↻ Refresh</button>
+  </header>
+
+  <main class="panel-main">
+
+    <!-- ====== SELECTION TRANSLATION (shown when text was right-clicked) -->
+    <section id="selection-section" class="panel-card" hidden>
+      <h2 class="card-heading">Your selected text</h2>
+      <blockquote id="selection-original" class="selection-quote"></blockquote>
+
+      <dl class="selection-result">
+        <dt>Plain meaning</dt>
+        <dd id="sel-plain"></dd>
+
+        <dt>Why it matters</dt>
+        <dd id="sel-why"></dd>
+
+        <dt>Next step</dt>
+        <dd id="sel-next"></dd>
+
+        <dt>Terms translated</dt>
+        <dd><ul id="sel-terms" class="term-list"></ul></dd>
+      </dl>
+
+      <p id="sel-note" class="panel-note" hidden></p>
+      <button id="btn-copy-selection" class="copy-btn">Copy this explanation</button>
+    </section>
+
+    <!-- ====== PAGE SUMMARY ====== -->
+    <details class="panel-card" open>
+      <summary class="card-heading">Page summary</summary>
+      <p id="page-summary" class="card-body">Reading the page…</p>
+    </details>
+
+    <!-- ====== WHAT THIS PAGE IS ASKING ====== -->
+    <details class="panel-card" open>
+      <summary class="card-heading">What this page is asking you to do</summary>
+      <p id="page-asking" class="card-body"></p>
+    </details>
+
+    <!-- ====== JARGON DETECTED ====== -->
+    <details class="panel-card">
+      <summary class="card-heading">Jargon detected <span id="jargon-count" class="count-badge"></span></summary>
+      <ul id="jargon-list" class="term-list card-body"></ul>
+    </details>
+
+    <!-- ====== NEXT STEPS ====== -->
+    <details class="panel-card" open>
+      <summary class="card-heading">Step-by-step next actions</summary>
+      <ol id="next-steps" class="steps-list card-body"></ol>
+    </details>
+
+    <!-- ====== RISK LEVEL ====== -->
+    <section class="panel-card" id="risk-card">
+      <h2 class="card-heading">Risk level</h2>
+      <p class="card-body">
+        <span id="risk-badge" class="risk-pill">…</span>
+        <span id="risk-message"></span>
+      </p>
+    </section>
+
+    <button id="btn-copy-all" class="copy-btn copy-btn-wide">
+      Copy translated instructions
+    </button>
+
+    <p id="panel-status" class="panel-note" role="status"></p>
+  </main>
+
+  <footer class="panel-footer">
+    We only translate text you interact with. We do not sell browsing data.
+  </footer>
+
+  <script src="services/storageService.js"></script>
+  <script src="services/glossaryService.js"></script>
+  <script src="services/translator.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+</html>
