@@ -214,7 +214,15 @@
         ...(pageInfo.buttons || []),
       ].join(" \n ");
 
-      const terms = glossary.uniqueTerms(allText);
+      // Union of terms found in the text sample and terms the content
+      // script already highlighted (the latter matters in Replace Mode,
+      // where the visible text no longer contains the original words).
+      const terms = [
+        ...new Set([
+          ...glossary.uniqueTerms(allText),
+          ...(pageInfo.highlightedTerms || []),
+        ]),
+      ];
       const site = identifySite(pageInfo.url || "");
 
       return {

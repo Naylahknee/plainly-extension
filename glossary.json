@@ -9,15 +9,19 @@
       "next": "a gentle suggested next step, if one makes sense",
       "aliases": "other spellings/phrases that mean the same thing",
       "category": "grouping for filtering and future expansion",
-      "risk": "low | medium | high — how careful the user should be"
+      "risk": "low | medium | high — how careful the user should be",
+      "replaceable": "false = never substituted inline by Replace Mode (name-like terms); tooltips, the side panel, and glosses still explain them. Default true."
     }
   },
-
   "repository": {
     "simple": "the main project folder",
     "detailed": "The main home for your files, updates, and project history. Everything about one project lives here.",
     "why": "Almost everything on GitHub happens inside a repository.",
-    "aliases": ["repo", "repositories", "repos"],
+    "aliases": [
+      "repo",
+      "repositories",
+      "repos"
+    ],
     "category": "version-control",
     "risk": "low"
   },
@@ -25,7 +29,11 @@
     "simple": "save this version with a note",
     "detailed": "A saved snapshot of your project at one moment in time, with a short note describing what changed.",
     "why": "Commits let you go back to any earlier version if something breaks.",
-    "aliases": ["commits", "committed", "commit changes"],
+    "aliases": [
+      "commits",
+      "committed",
+      "commit changes"
+    ],
     "category": "version-control",
     "risk": "low"
   },
@@ -34,7 +42,12 @@
     "detailed": "A polite, reviewable request to merge your changes into the main project. Others can look it over before anything changes.",
     "why": "Nothing in the main project changes until someone approves it.",
     "next": "If you're ready to share your changes, open a pull request and describe what you did in plain words.",
-    "aliases": ["pull requests", "pr", "prs", "merge request"],
+    "aliases": [
+      "pull requests",
+      "pr",
+      "prs",
+      "merge request"
+    ],
     "category": "version-control",
     "risk": "low"
   },
@@ -42,7 +55,11 @@
     "simple": "make your own editable copy",
     "detailed": "Your own personal copy of someone else's project that you can change freely without affecting the original.",
     "why": "You can experiment safely — the original project is never touched.",
-    "aliases": ["forks", "forked", "forking"],
+    "aliases": [
+      "forks",
+      "forked",
+      "forking"
+    ],
     "category": "version-control",
     "risk": "low"
   },
@@ -50,7 +67,10 @@
     "simple": "a safe testing version of your project",
     "detailed": "A safe copy of your project where you can test changes without affecting the main version.",
     "why": "If your experiment doesn't work out, the main version stays untouched.",
-    "aliases": ["branches", "branching"],
+    "aliases": [
+      "branches",
+      "branching"
+    ],
     "category": "version-control",
     "risk": "low"
   },
@@ -58,28 +78,42 @@
     "simple": "combine changes together",
     "detailed": "Taking changes from one version of the project and folding them into another, usually into the main version.",
     "why": "Merging is how approved work becomes part of the real project.",
-    "aliases": ["merged", "merging", "merge conflict"],
+    "aliases": [
+      "merged",
+      "merging",
+      "merge conflict"
+    ],
     "category": "version-control",
     "risk": "medium"
   },
   "clone": {
     "simple": "download a full copy to your computer",
     "detailed": "Downloading a complete copy of a project — files and history — onto your own computer so you can work on it.",
-    "aliases": ["cloned", "cloning", "git clone"],
+    "aliases": [
+      "cloned",
+      "cloning",
+      "git clone"
+    ],
     "category": "version-control",
     "risk": "low"
   },
   "push": {
     "simple": "upload your saved changes",
     "detailed": "Sending the versions you saved on your computer up to the online project so others (and your tools) can see them.",
-    "aliases": ["pushed", "pushing", "git push"],
+    "aliases": [
+      "pushed",
+      "pushing",
+      "git push"
+    ],
     "category": "version-control",
     "risk": "low"
   },
   "pull": {
     "simple": "download the latest changes",
     "detailed": "Fetching the newest changes from the online project down to your computer so you're up to date.",
-    "aliases": ["git pull"],
+    "aliases": [
+      "git pull"
+    ],
     "category": "version-control",
     "risk": "low"
   },
@@ -88,14 +122,24 @@
     "detailed": "Taking your project from 'files in a folder' to 'a real website or app people can visit'.",
     "why": "Until you deploy, your changes exist but nobody on the internet can see them.",
     "next": "When you're happy with your changes, look for a Deploy or Publish button.",
-    "aliases": ["deploys", "deployed", "deploying", "deployment", "deployments", "redeploy"],
+    "aliases": [
+      "deploys",
+      "deployed",
+      "deploying",
+      "deployment",
+      "deployments",
+      "redeploy"
+    ],
     "category": "hosting",
     "risk": "medium"
   },
   "build": {
     "simple": "prepare your project to go live",
     "detailed": "The automatic process that packages your files into their final, publishable form. It happens before a site goes live.",
-    "aliases": ["builds", "building"],
+    "aliases": [
+      "builds",
+      "building"
+    ],
     "category": "hosting",
     "risk": "low"
   },
@@ -104,7 +148,13 @@
     "detailed": "Something stopped your project from being packaged for publishing. Your live site is usually unaffected — the previous version stays up.",
     "why": "Your newest changes are not live yet, but nothing is broken for visitors.",
     "next": "Open the build log and look at the first error message — it usually names the file causing trouble.",
-    "aliases": ["failed build", "build error", "build failure", "deployment failed", "deploy failed"],
+    "aliases": [
+      "failed build",
+      "build error",
+      "build failure",
+      "deployment failed",
+      "deploy failed"
+    ],
     "category": "hosting",
     "risk": "medium"
   },
@@ -112,143 +162,235 @@
     "simple": "the real, live version people see",
     "detailed": "The version of your site or app that the public actually uses — as opposed to test versions only you can see.",
     "why": "Changes to production affect real visitors immediately.",
-    "aliases": ["prod", "production environment"],
+    "aliases": [
+      "prod",
+      "production environment"
+    ],
     "category": "hosting",
     "risk": "high"
   },
   "staging": {
     "simple": "a private practice version of your site",
     "detailed": "A private copy of your site used to check changes before showing them to the public.",
-    "aliases": ["staging environment"],
+    "aliases": [
+      "staging environment"
+    ],
     "category": "hosting",
     "risk": "low"
   },
   "preview deployment": {
     "simple": "a temporary test version of your site",
     "detailed": "A temporary, shareable version of your site created so you can check changes before they go live for everyone.",
-    "aliases": ["preview deployments", "deploy preview", "preview url"],
+    "aliases": [
+      "preview deployments",
+      "deploy preview",
+      "preview url"
+    ],
     "category": "hosting",
     "risk": "low"
   },
   "domain": {
     "simple": "your website's address",
     "detailed": "The name people type to reach your site, like yoursite.com.",
-    "aliases": ["domains", "custom domain", "domain name"],
+    "aliases": [
+      "domains",
+      "custom domain",
+      "domain name"
+    ],
     "category": "hosting",
     "risk": "low"
   },
   "dns": {
     "simple": "the internet's address book",
     "detailed": "The system that connects your website's name (like yoursite.com) to the computer that actually hosts it. DNS changes can take a few hours to spread.",
-    "aliases": ["dns records", "nameserver", "nameservers"],
+    "aliases": [
+      "dns records",
+      "nameserver",
+      "nameservers"
+    ],
     "category": "hosting",
-    "risk": "medium"
+    "risk": "medium",
+    "replaceable": false
   },
   "ssl certificate": {
     "simple": "the padlock that makes your site secure",
     "detailed": "A digital certificate that encrypts traffic to your site and gives visitors the padlock icon. Most platforms set this up automatically.",
-    "aliases": ["ssl", "tls", "https certificate"],
+    "aliases": [
+      "ssl",
+      "tls",
+      "https certificate"
+    ],
     "category": "hosting",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "environment variable": {
     "simple": "a private setting your app reads",
     "detailed": "A named value (often a password or key) stored outside your code so your app can use it without exposing it publicly.",
     "why": "Keys stored this way stay out of your public code.",
-    "aliases": ["environment variables", "env var", "env vars", "env variables"],
+    "aliases": [
+      "environment variables",
+      "env var",
+      "env vars",
+      "env variables"
+    ],
     "category": "configuration",
     "risk": "high"
   },
   "api": {
     "simple": "a way for apps to talk to each other",
     "detailed": "A set of rules that lets one piece of software ask another for information or actions — like a waiter carrying requests between you and the kitchen.",
-    "aliases": ["apis", "rest api", "api endpoint", "endpoint", "endpoints"],
+    "aliases": [
+      "apis",
+      "rest api",
+      "api endpoint",
+      "endpoint",
+      "endpoints"
+    ],
     "category": "integration",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "api key": {
     "simple": "a password that lets an app use a service",
     "detailed": "A secret code that proves your app is allowed to use a service. Treat it like a password — never share it publicly.",
     "why": "Anyone who has your key can use the service as you, sometimes spending your money.",
     "next": "If a key may have leaked, regenerate it from the service's dashboard.",
-    "aliases": ["api keys", "secret key", "access token", "access tokens", "auth token", "token"],
+    "aliases": [
+      "api keys",
+      "secret key",
+      "access token",
+      "access tokens",
+      "auth token",
+      "token"
+    ],
     "category": "security",
-    "risk": "high"
+    "risk": "high",
+    "replaceable": false
   },
   "webhook": {
     "simple": "an automatic message sent when something happens",
     "detailed": "A way for one service to instantly notify another when an event occurs — like a doorbell between two apps.",
-    "aliases": ["webhooks", "web hook"],
+    "aliases": [
+      "webhooks",
+      "web hook"
+    ],
     "category": "integration",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "oauth": {
     "simple": "log in using another account you already have",
     "detailed": "A safe way to let one app access another account (like 'Sign in with Google') without giving away your password.",
-    "aliases": ["oauth2", "single sign-on", "sso"],
+    "aliases": [
+      "oauth2",
+      "single sign-on",
+      "sso"
+    ],
     "category": "security",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "authentication": {
     "simple": "proving who you are",
     "detailed": "The process of confirming you are who you say you are, usually with a password, code, or linked account.",
-    "aliases": ["authenticate", "authenticated", "auth"],
+    "aliases": [
+      "authenticate",
+      "authenticated",
+      "auth"
+    ],
     "category": "security",
     "risk": "low"
   },
   "two-factor authentication": {
     "simple": "a second check when you log in",
     "detailed": "An extra login step (like a code from your phone) that keeps your account safe even if someone learns your password.",
-    "aliases": ["2fa", "mfa", "multi-factor authentication", "two factor"],
+    "aliases": [
+      "2fa",
+      "mfa",
+      "multi-factor authentication",
+      "two factor"
+    ],
     "category": "security",
     "risk": "low"
   },
   "readme": {
     "simple": "the project's welcome page",
     "detailed": "The first document people see in a project. It explains what the project is and how to use it.",
-    "aliases": ["readme.md"],
+    "aliases": [
+      "readme.md"
+    ],
     "category": "documentation",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "markdown": {
     "simple": "simple formatting using plain text",
     "detailed": "A lightweight way to format text using symbols — like *stars* for bold — that gets turned into styled text.",
-    "aliases": ["md"],
+    "aliases": [
+      "md"
+    ],
     "category": "documentation",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "open source": {
     "simple": "free for anyone to use and improve",
     "detailed": "Software whose code is public — anyone can read it, use it, and suggest improvements.",
-    "aliases": ["open-source", "oss"],
+    "aliases": [
+      "open-source",
+      "oss"
+    ],
     "category": "general",
     "risk": "low"
   },
   "license": {
     "simple": "the rules for using this project",
     "detailed": "A document stating what others are allowed to do with the project — use it, change it, sell it, and so on.",
-    "aliases": ["licenses", "mit license", "licensing"],
+    "aliases": [
+      "licenses",
+      "mit license",
+      "licensing"
+    ],
     "category": "general",
     "risk": "low"
   },
   "dependency": {
     "simple": "other code your project needs to work",
     "detailed": "A piece of ready-made code your project borrows so you don't have to build everything from scratch.",
-    "aliases": ["dependencies", "package", "packages", "npm package"],
+    "aliases": [
+      "dependencies",
+      "package",
+      "packages",
+      "npm package"
+    ],
     "category": "general",
     "risk": "low"
   },
   "ci/cd": {
     "simple": "automatic checking and publishing",
     "detailed": "Robots that automatically test your changes and publish them when everything passes — so you don't have to do it by hand.",
-    "aliases": ["ci", "cd", "continuous integration", "continuous deployment", "pipeline", "pipelines", "github actions", "workflow run"],
+    "aliases": [
+      "ci",
+      "cd",
+      "continuous integration",
+      "continuous deployment",
+      "pipeline",
+      "pipelines",
+      "github actions",
+      "workflow run"
+    ],
     "category": "hosting",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "issue": {
     "simple": "a tracked task, bug, or idea",
     "detailed": "A note attached to a project describing a bug, request, or task, so work can be discussed and tracked in one place.",
-    "aliases": ["issues", "open an issue"],
+    "aliases": [
+      "issues",
+      "open an issue"
+    ],
     "category": "version-control",
     "risk": "low"
   },
@@ -256,84 +398,134 @@
     "simple": "go back to an earlier working version",
     "detailed": "Undoing a recent change by switching back to a version that worked before.",
     "why": "This is your safety net — most mistakes can be undone with a rollback.",
-    "aliases": ["roll back", "revert", "reverted", "reverting"],
+    "aliases": [
+      "roll back",
+      "revert",
+      "reverted",
+      "reverting"
+    ],
     "category": "hosting",
     "risk": "medium"
   },
   "cache": {
     "simple": "saved copies that make things faster",
     "detailed": "Temporarily stored copies of files so pages load faster. Sometimes you see old content until the cache clears.",
-    "aliases": ["cached", "caching", "cdn cache"],
+    "aliases": [
+      "cached",
+      "caching",
+      "cdn cache"
+    ],
     "category": "hosting",
     "risk": "low"
   },
   "cdn": {
     "simple": "a network that delivers your site quickly worldwide",
     "detailed": "A group of servers around the world that hold copies of your site so it loads fast for everyone, everywhere.",
-    "aliases": ["content delivery network", "edge network"],
+    "aliases": [
+      "content delivery network",
+      "edge network"
+    ],
     "category": "hosting",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "serverless": {
     "simple": "code that runs without you managing a server",
     "detailed": "A way to run small pieces of code in the cloud only when needed — the platform handles all the machinery for you.",
-    "aliases": ["serverless function", "serverless functions", "lambda", "edge function", "edge functions", "cloud function"],
+    "aliases": [
+      "serverless function",
+      "serverless functions",
+      "lambda",
+      "edge function",
+      "edge functions",
+      "cloud function"
+    ],
     "category": "hosting",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "localhost": {
     "simple": "your own computer, acting as a private test site",
     "detailed": "A version of your site running only on your computer. Nobody else on the internet can see it.",
-    "aliases": ["local host", "127.0.0.1", "local development"],
+    "aliases": [
+      "local host",
+      "127.0.0.1",
+      "local development"
+    ],
     "category": "general",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "terminal": {
     "simple": "the text window for typing commands",
     "detailed": "A window where you control your computer by typing commands instead of clicking buttons.",
-    "aliases": ["command line", "cli", "shell", "console"],
+    "aliases": [
+      "command line",
+      "cli",
+      "shell",
+      "console"
+    ],
     "category": "general",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "json": {
     "simple": "a structured format computers use to share data",
     "detailed": "A simple text format for organizing information — labels and values — that both humans and computers can read.",
-    "aliases": ["json file"],
+    "aliases": [
+      "json file"
+    ],
     "category": "general",
-    "risk": "low"
+    "risk": "low",
+    "replaceable": false
   },
   "sandbox": {
     "simple": "a safe practice area",
     "detailed": "A protected test environment where you can try things without affecting anything real — common in payment tools like Stripe.",
-    "aliases": ["sandbox mode", "test mode"],
+    "aliases": [
+      "sandbox mode",
+      "test mode"
+    ],
     "category": "general",
     "risk": "low"
   },
   "rate limit": {
     "simple": "a cap on how often you can ask",
     "detailed": "A limit on how many requests you can make in a period of time. Hitting it means 'slow down', not 'something is broken'.",
-    "aliases": ["rate limits", "rate limited", "rate limiting", "429"],
+    "aliases": [
+      "rate limits",
+      "rate limited",
+      "rate limiting",
+      "429"
+    ],
     "category": "integration",
     "risk": "low"
   },
   "zap": {
     "simple": "an automated recipe connecting two apps",
     "detailed": "In Zapier, a Zap is an automation: when something happens in one app, it triggers an action in another.",
-    "aliases": ["zaps"],
+    "aliases": [
+      "zaps"
+    ],
     "category": "integration",
     "risk": "low"
   },
   "trigger": {
     "simple": "the event that starts an automation",
     "detailed": "The 'when this happens' part of an automation — like 'when a new email arrives'.",
-    "aliases": ["triggers"],
+    "aliases": [
+      "triggers"
+    ],
     "category": "integration",
     "risk": "low"
   },
   "payload": {
     "simple": "the actual data being sent",
     "detailed": "The package of information one app sends to another in a request or notification.",
-    "aliases": ["payloads", "request body"],
+    "aliases": [
+      "payloads",
+      "request body"
+    ],
     "category": "integration",
     "risk": "low"
   },
@@ -346,28 +538,38 @@
   "uptime": {
     "simple": "how often your site is working",
     "detailed": "The percentage of time your site is online and reachable. 99.9% uptime means almost never down.",
-    "aliases": ["downtime"],
+    "aliases": [
+      "downtime"
+    ],
     "category": "hosting",
     "risk": "low"
   },
   "instance": {
     "simple": "one running copy of an app or server",
     "detailed": "A single running copy of a program or server. More instances usually means handling more visitors.",
-    "aliases": ["instances"],
+    "aliases": [
+      "instances"
+    ],
     "category": "hosting",
     "risk": "low"
   },
   "framework": {
     "simple": "a ready-made foundation for building apps",
     "detailed": "A pre-built structure (like Next.js or React) that handles common work so builders can focus on what makes their project unique.",
-    "aliases": ["frameworks"],
+    "aliases": [
+      "frameworks"
+    ],
     "category": "general",
     "risk": "low"
   },
   "migration": {
     "simple": "a structured change to stored data",
     "detailed": "A controlled update to how data is stored — like reorganizing a filing cabinet without losing any files.",
-    "aliases": ["migrations", "database migration", "migrate"],
+    "aliases": [
+      "migrations",
+      "database migration",
+      "migrate"
+    ],
     "category": "general",
     "risk": "high"
   }

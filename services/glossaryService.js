@@ -212,7 +212,11 @@
       return text.replace(this.termPattern, (match, _group, offset) => {
         if (isFileLikeContext(text, offset, offset + match.length)) return match;
         const found = this.lookup(match);
-        return found ? found.entry.simple : match;
+        // Name-like terms (JSON, API, DNS...) are never substituted —
+        // hiding the actual word would stop users from learning to
+        // recognize it. They still get tooltips and glosses.
+        if (!found || found.entry.replaceable === false) return match;
+        return found.entry.simple;
       });
     },
   };

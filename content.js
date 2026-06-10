@@ -159,11 +159,13 @@
         `${match} — Plainly explanation available`
       );
 
-      if (settings.replaceMode) {
+      const entry = glossaryService.entries[term];
+      if (settings.replaceMode && entry && entry.replaceable !== false) {
         // Replace Mode: show the plain meaning inline, keep the original
         // recoverable in a data attribute (and visible in the tooltip).
-        const entry = glossaryService.entries[term];
-        span.textContent = entry ? entry.simple : match;
+        // Name-like terms (JSON, API, DNS...) opt out via replaceable:false
+        // — they keep their real name and get explained on hover instead.
+        span.textContent = entry.simple;
         span.dataset.plainlyOriginal = match;
         span.classList.add("plainly-term-replaced");
       } else {
@@ -291,6 +293,18 @@
 
         const bodySample = (scope.innerText || "").slice(0, 4000);
 
+        // Terms already highlighted on the page. Crucial in Replace Mode:
+        // the visible text no longer contains "repository" etc., so a text
+        // scan alone would miss them — but the side panel should still
+        // define every term the user can see explained.
+        const highlightedTerms = [
+          ...new Set(
+            [...document.querySelectorAll(`.${TERM_CLASS}`)]
+              .map((s) => s.dataset.plainlyTerm)
+              .filter(Boolean)
+          ),
+        ];
+
         sendResponse({
           ok: true,
           pageInfo: {
@@ -299,6 +313,7 @@
             headings,
             buttons,
             bodySample,
+            highlightedTerms,
           },
         });
         break;

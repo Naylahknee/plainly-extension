@@ -65,14 +65,22 @@
     $("page-summary").textContent = analysis.summary;
     $("page-asking").textContent = analysis.asking;
 
-    // Jargon list — each term with its plain meaning.
+    // Jargon list — each term with its plain meaning, plus the fuller
+    // definition underneath so the panel doubles as a mini-glossary.
     const jargonList = $("jargon-list");
     jargonList.replaceChildren(
       ...analysis.terms.map((t) => {
         const li = document.createElement("li");
+        li.className = "jargon-entry";
         const strong = document.createElement("strong");
         strong.textContent = t.title;
         li.append(strong, document.createTextNode(` — ${t.simple}`));
+        if (t.body && t.body !== t.simple) {
+          const detail = document.createElement("p");
+          detail.className = "jargon-detail";
+          detail.textContent = t.body;
+          li.append(detail);
+        }
         return li;
       })
     );
