@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plainly — Tech, in plain English</title>
+  <meta name="description" content="Paste confusing technical text and get a calm, plain-English explanation. Like Google Translate, but for tech jargon." />
+  <meta name="theme-color" content="#5b6ee1" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon192.png" />
+  <link rel="apple-touch-icon" href="icons/icon192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <span class="logo" aria-hidden="true"></span>
+    <div>
+      <h1>Plainly</h1>
+      <p class="tagline">Tech, in plain English</p>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ============ INPUT ============ -->
+    <section class="card">
+      <label for="input-text" class="card-heading">Paste the confusing part</label>
+      <textarea
+        id="input-text"
+        rows="5"
+        placeholder="e.g. “Your build failed because of a missing environment variable. Commit your changes and redeploy.”"
+      ></textarea>
+
+      <div class="controls">
+        <select id="mode-select" aria-label="Explanation style">
+          <option value="beginner">Beginner — plainest possible</option>
+          <option value="business">Business owner</option>
+          <option value="creator">Creator</option>
+          <option value="adhd">ADHD — short chunks</option>
+          <option value="devlite">Developer lite</option>
+        </select>
+        <button id="btn-translate" class="primary-btn">Translate</button>
+      </div>
+    </section>
+
+    <!-- ============ RESULT ============ -->
+    <section class="card" id="result-card" hidden>
+      <h2 class="card-heading">In plain English</h2>
+      <dl class="result">
+        <dt>Plain meaning</dt>
+        <dd id="out-plain"></dd>
+        <dt>Why it matters</dt>
+        <dd id="out-why"></dd>
+        <dt>Next step</dt>
+        <dd id="out-next"></dd>
+        <dt id="out-risks-label" hidden>Risks</dt>
+        <dd id="out-risks" hidden></dd>
+        <dt>Terms translated</dt>
+        <dd><ul id="out-terms" class="term-list"></ul></dd>
+      </dl>
+      <p id="out-source" class="note" hidden></p>
+      <p id="out-note" class="note" hidden></p>
+      <div class="controls">
+        <button id="btn-copy" class="ghost-btn">Copy explanation</button>
+        <button id="btn-ai-deeper" class="ghost-btn" hidden>Explain deeper with AI</button>
+      </div>
+    </section>
+
+    <!-- ============ AI SETTINGS (collapsible, optional) ============ -->
+    <details class="card">
+      <summary class="card-heading">AI assistance (optional)</summary>
+      <p class="note">
+        Plainly works offline with its built-in glossary. Connect your own
+        AI key for deeper explanations. Your key stays on this device.
+      </p>
+      <div class="settings-grid">
+        <select id="ai-provider" aria-label="AI provider">
+          <option value="none">Off — glossary only</option>
+          <option value="claude">Claude (Anthropic)</option>
+          <option value="openai">OpenAI</option>
+          <option value="gemini">Gemini (Google)</option>
+          <option value="local">Local model (Ollama)</option>
+        </select>
+        <input type="password" id="ai-key" placeholder="API key" autocomplete="off" hidden />
+        <input type="text" id="ai-model" placeholder="Model (blank = default)" autocomplete="off" hidden />
+        <button id="btn-ai-save" class="primary-btn" hidden>Save &amp; test</button>
+      </div>
+      <p id="ai-status" class="note" role="status"></p>
+    </details>
+
+    <p class="footer-note">
+      We only translate text you give us. We do not sell anything about you.
+      · <span id="glossary-count"></span>
+    </p>
+  </main>
+
+  <!-- Shim must load first: it gives the shared extension services a
+       chrome.* lookalike backed by localStorage/fetch. -->
+  <script src="shim.js"></script>
+  <script src="services/storageService.js"></script>
+  <script src="services/glossaryService.js"></script>
+  <script src="services/translator.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

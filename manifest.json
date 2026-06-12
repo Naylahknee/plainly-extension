@@ -2,7 +2,8 @@
   "manifest_version": 3,
   "name": "Plainly — Plain English for Technical Websites",
   "short_name": "Plainly",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "minimum_chrome_version": "116",
   "description": "Translates technical jargon into plain English while you browse. Like Google Translate, but for tech jargon.",
 
   "icons": {

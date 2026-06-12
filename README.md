@@ -69,6 +69,18 @@ Translation is local; the scanner never reads inputs, passwords, or anything
 you type; no analytics, no tracking. Permissions are minimal: storage,
 activeTab, contextMenus, sidePanel, and host access to the ~9 supported sites.
 
+## Publishing
+
+- **Chrome Web Store**: `./scripts/package.sh` builds the upload zip;
+  `store/LISTING.md` has the ready-to-paste listing copy, permission
+  justifications, and screenshots (`store/screenshots/`). Privacy policy:
+  `PRIVACY.md`.
+- **Android / APK**: extensions can't run as APKs, so `web/` contains
+  **Plainly Web** — a PWA with the same glossary + AI engine (paste text →
+  plain English, works offline). `./scripts/build-web.sh` builds it;
+  `store/ANDROID.md` walks through deploying it and wrapping it into a
+  Play-Store-ready APK with PWABuilder or Bubblewrap.
+
 ## Project structure
 
 ```

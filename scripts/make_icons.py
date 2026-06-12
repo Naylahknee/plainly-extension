@@ -84,7 +84,15 @@ def write_png(path, size):
 
 
 if __name__ == "__main__":
-    out = os.path.join(os.path.dirname(__file__), "..", "assets")
-    os.makedirs(out, exist_ok=True)
-    for s in (16, 48, 128):
-        write_png(os.path.join(out, f"icon{s}.png"), s)
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Generate Plainly icons")
+    parser.add_argument("--sizes", default="16,48,128",
+                        help="comma-separated pixel sizes (default: 16,48,128)")
+    parser.add_argument("--out", default=os.path.join(os.path.dirname(__file__), "..", "assets"),
+                        help="output directory (default: assets/)")
+    args = parser.parse_args()
+
+    os.makedirs(args.out, exist_ok=True)
+    for s in (int(x) for x in args.sizes.split(",")):
+        write_png(os.path.join(args.out, f"icon{s}.png"), s)
