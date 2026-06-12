@@ -10,7 +10,7 @@
  */
 
 (function () {
-  const { storageService, glossaryService } = globalThis.Plainly;
+  const { storageService, glossaryService, translator } = globalThis.Plainly;
 
   // ---- element handles -------------------------------------------------
   const $ = (id) => document.getElementById(id);
@@ -25,6 +25,15 @@
   const glossaryList = $("glossary-list");
   const modeSelect = $("mode-select");
   const toggleReplace = $("toggle-replace");
+  const aiProviderSelect = $("ai-provider");
+  const aiKeyRow = $("ai-key-row");
+  const aiKeyInput = $("ai-key");
+  const aiModelRow = $("ai-model-row");
+  const aiModelInput = $("ai-model");
+  const aiModelHint = $("ai-model-hint");
+  const aiSaveRow = $("ai-save-row");
+  const btnAiSave = $("btn-ai-save");
+  const aiStatus = $("ai-status");
 
   /** Show quiet feedback under the header. */
   function setStatus(text) {
@@ -69,6 +78,26 @@
     );
 
     await glossaryService.load();
+
+    // ---- AI settings ----
+    aiProviderSelect.value = settings.aiProvider || "none";
+    aiModelInput.value = settings.aiModel || "";
+    const keys = await storageService.getAiKeys();
+    aiKeyInput.value = keys[settings.aiProvider] || "";
+    refreshAiRows();
+  }
+
+  /** Show/hide the key, model, and save rows based on the chosen provider. */
+  function refreshAiRows() {
+    const provider = translator.providers[aiProviderSelect.value];
+    const isOff = !provider || provider.id === "none";
+    aiKeyRow.hidden = isOff || !provider.needsKey;
+    aiModelRow.hidden = isOff;
+    aiSaveRow.hidden = isOff;
+    if (!isOff) {
+      aiModelInput.placeholder = provider.defaultModel;
+      aiModelHint.textContent = `Leave blank for the default (${provider.defaultModel})`;
+    }
   }
 
   /* ====================================================================
@@ -214,6 +243,65 @@
         ? "Replace mode on — jargon is rewritten in place."
         : "Replace mode off — jargon is underlined instead."
     );
+  });
+
+  /* ====================================================================
+   *  AI SETTINGS
+   * ==================================================================== */
+
+  aiProviderSelect.addEventListener("change", async () => {
+    refreshAiRows();
+    const keys = await storageService.getAiKeys();
+    aiKeyInput.value = keys[aiProviderSelect.value] || "";
+    aiStatus.textContent = "";
+    // Turning AI off needs no save button — apply immediately.
+    if (aiProviderSelect.value === "none") {
+      await storageService.updateSettings({ aiProvider: "none" });
+      setStatus("AI assistance is off. Plainly is glossary-only.");
+    }
+  });
+
+  btnAiSave.addEventListener("click", async () => {
+    const providerId = aiProviderSelect.value;
+    const provider = translator.providers[providerId];
+    if (!provider || providerId === "none") return;
+
+    const key = aiKeyInput.value.trim();
+    if (provider.needsKey && !key) {
+      aiStatus.textContent = "Paste your API key first.";
+      return;
+    }
+
+    aiStatus.textContent = "Connecting…";
+    btnAiSave.disabled = true;
+    try {
+      // 1. Ask Chrome for permission to talk to this ONE provider's API.
+      //    This must happen inside the click handler (user gesture).
+      const granted = await chrome.permissions.request({
+        origins: providerId === "local"
+          ? ["http://localhost/*", "http://127.0.0.1/*"]
+          : [provider.origin],
+      });
+      if (!granted) {
+        aiStatus.textContent = "Permission was declined — Plainly can't reach that provider.";
+        return;
+      }
+
+      // 2. Save the configuration locally.
+      await storageService.setAiKey(providerId, key);
+      await storageService.updateSettings({
+        aiProvider: providerId,
+        aiModel: aiModelInput.value.trim(),
+      });
+
+      // 3. Prove it works with one tiny request.
+      await translator.testProvider();
+      aiStatus.textContent = `Connected! ${provider.label} is ready for deeper explanations.`;
+    } catch (err) {
+      aiStatus.textContent = `Couldn't connect: ${err.message}`;
+    } finally {
+      btnAiSave.disabled = false;
+    }
   });
 
   /* ==================================================================== */

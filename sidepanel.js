@@ -26,6 +26,10 @@
   let lastAnalysis = null;
   let lastSelectionResult = null;
 
+  /** Raw inputs kept so "Explain deeper with AI" can re-run them. */
+  let lastSelectionText = "";
+  let lastPageInfo = null;
+
   /* ====================================================================
    *  PAGE EXPLAINER
    * ==================================================================== */
@@ -50,7 +54,13 @@
     const settings = await storageService.getSettings();
     const analysis = await translator.summarizePage(reply.pageInfo, settings.mode);
     lastAnalysis = analysis;
+    lastPageInfo = reply.pageInfo;
     renderAnalysis(analysis);
+
+    // Surface the AI buttons only when a provider is actually configured.
+    const aiConfig = await translator.getAIConfig();
+    $("btn-ai-page").hidden = !aiConfig.configured;
+    $("ai-page-card").hidden = true;
   }
 
   function renderUnsupported() {
@@ -122,17 +132,38 @@
     await storageService.clearTransient(PENDING_SELECTION_KEY);
 
     const settings = await storageService.getSettings();
+    lastSelectionText = pending.text;
     const result = await translator.translateSelection(pending.text, settings.mode);
     lastSelectionResult = result;
-    renderSelection(result);
+    await renderSelection(result);
   }
 
-  function renderSelection(result) {
+  async function renderSelection(result) {
     $("selection-section").hidden = false;
     $("selection-original").textContent = truncate(result.original, 280);
     $("sel-plain").textContent = result.plainMeaning;
     $("sel-why").textContent = result.whyItMatters;
     $("sel-next").textContent = result.nextStep;
+
+    // Risks row appears only when the AI flagged something real.
+    const hasRisks = Boolean(result.risks);
+    $("sel-risks-label").hidden = !hasRisks;
+    $("sel-risks").hidden = !hasRisks;
+    $("sel-risks").textContent = result.risks || "";
+
+    // Attribution: be transparent about where the answer came from.
+    const source = $("sel-source");
+    if (result.source === "ai") {
+      source.hidden = false;
+      source.textContent = `Explained by ${result.aiProvider || "AI"} — review important details yourself.`;
+    } else {
+      source.hidden = true;
+    }
+
+    // Offer the deeper-AI button when a provider is configured and this
+    // answer didn't already come from AI.
+    const aiConfig = await translator.getAIConfig();
+    $("btn-ai-deeper").hidden = !aiConfig.configured || result.source === "ai";
 
     const termList = $("sel-terms");
     if (result.termsTranslated.length === 0) {
@@ -166,6 +197,53 @@
   });
 
   /* ====================================================================
+   *  AI ACTIONS (only ever run on an explicit click)
+   * ==================================================================== */
+
+  $("btn-ai-deeper").addEventListener("click", async () => {
+    if (!lastSelectionText) return;
+    const btn = $("btn-ai-deeper");
+    btn.disabled = true;
+    btn.textContent = "Asking AI…";
+    try {
+      const settings = await storageService.getSettings();
+      const result = await translator.translateSelection(
+        lastSelectionText,
+        settings.mode,
+        { deeper: true }
+      );
+      lastSelectionResult = result;
+      await renderSelection(result);
+      if (result.note) $("panel-status").textContent = "";
+    } catch (err) {
+      $("panel-status").textContent = `AI explanation failed: ${err.message}`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Explain deeper with AI";
+    }
+  });
+
+  $("btn-ai-page").addEventListener("click", async () => {
+    if (!lastPageInfo) return;
+    const btn = $("btn-ai-page");
+    btn.disabled = true;
+    btn.textContent = "Asking AI…";
+    try {
+      const settings = await storageService.getSettings();
+      const briefing = await translator.explainPageWithAI(lastPageInfo, settings.mode);
+      const config = await translator.getAIConfig();
+      $("ai-page-body").textContent = briefing;
+      $("ai-page-provider").textContent = config.provider.label;
+      $("ai-page-card").hidden = false;
+    } catch (err) {
+      $("panel-status").textContent = `AI explanation failed: ${err.message}`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Explain this page with AI";
+    }
+  });
+
+  /* ====================================================================
    *  COPY TO CLIPBOARD
    * ==================================================================== */
 
@@ -181,6 +259,7 @@
       "",
       "Next Step:",
       r.nextStep,
+      ...(r.risks ? ["", "Risks:", r.risks] : []),
       "",
       "Terms Translated:",
       ...r.termsTranslated.map((t) => `- ${t.term}: ${t.meaning}`),

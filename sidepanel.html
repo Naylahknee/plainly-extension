@@ -36,19 +36,31 @@
         <dt>Next step</dt>
         <dd id="sel-next"></dd>
 
+        <dt id="sel-risks-label" hidden>Risks</dt>
+        <dd id="sel-risks" hidden></dd>
+
         <dt>Terms translated</dt>
         <dd><ul id="sel-terms" class="term-list"></ul></dd>
       </dl>
 
+      <p id="sel-source" class="panel-note" hidden></p>
       <p id="sel-note" class="panel-note" hidden></p>
       <button id="btn-copy-selection" class="copy-btn">Copy this explanation</button>
+      <button id="btn-ai-deeper" class="copy-btn" hidden>Explain deeper with AI</button>
     </section>
 
     <!-- ====== PAGE SUMMARY ====== -->
     <details class="panel-card" open>
       <summary class="card-heading">Page summary</summary>
       <p id="page-summary" class="card-body">Reading the page…</p>
+      <button id="btn-ai-page" class="copy-btn" hidden>Explain this page with AI</button>
     </details>
+
+    <!-- ====== AI PAGE BRIEFING (filled on request) ====== -->
+    <section class="panel-card" id="ai-page-card" hidden>
+      <h2 class="card-heading">AI explanation <span id="ai-page-provider" class="count-badge"></span></h2>
+      <p id="ai-page-body" class="card-body ai-briefing"></p>
+    </section>
 
     <!-- ====== WHAT THIS PAGE IS ASKING ====== -->
     <details class="panel-card" open>

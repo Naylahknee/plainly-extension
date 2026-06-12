@@ -38,9 +38,22 @@
 
     // Whether tooltips appear on hover (true) or only on click/focus (false).
     tooltipsOnHover: true,
+
+    // ---- AI assistance (optional, OFF by default) ----
+    // Which AI provider to use for deeper explanations.
+    // "none" | "claude" | "openai" | "gemini" | "local"
+    aiProvider: "none",
+
+    // Optional model override. Empty string = use the provider's default.
+    aiModel: "",
   };
 
   const SETTINGS_KEY = "plainlySettings";
+
+  // API keys live under their own storage key, separate from settings,
+  // so exporting/debugging settings never accidentally exposes a key.
+  // chrome.storage.local only — keys never leave this device.
+  const AI_KEYS_KEY = "plainlyAiKeys";
 
   const storageService = {
     DEFAULT_SETTINGS,
@@ -83,6 +96,29 @@
           callback(next);
         }
       });
+    },
+
+    /**
+     * Read the locally stored AI API keys: { claude: "...", openai: "..." }.
+     * Returns an empty object when none are saved.
+     */
+    async getAiKeys() {
+      const result = await chrome.storage.local.get(AI_KEYS_KEY);
+      return result[AI_KEYS_KEY] || {};
+    },
+
+    /**
+     * Save (or clear, by passing an empty string) the API key for one
+     * provider. Keys are stored ONLY in chrome.storage.local on this device.
+     * @param {string} provider - "claude" | "openai" | "gemini" | "local"
+     * @param {string} key
+     */
+    async setAiKey(provider, key) {
+      const keys = await this.getAiKeys();
+      if (key) keys[provider] = key;
+      else delete keys[provider];
+      await chrome.storage.local.set({ [AI_KEYS_KEY]: keys });
+      return keys;
     },
 
     /**

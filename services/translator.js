@@ -23,21 +23,26 @@
   const Plainly = (globalThis.Plainly = globalThis.Plainly || {});
 
   /* ------------------------------------------------------------------ *
-   *  AI PROVIDER REGISTRY (placeholder architecture)
+   *  AI PROVIDER REGISTRY
    * ------------------------------------------------------------------ *
    * Each provider implements one method:
-   *   complete(prompt, options) → Promise<string>
+   *   complete(prompt, config) → Promise<string>
+   * where config = { apiKey, model } loaded from local storage.
    *
-   * To wire up a real provider later, implement complete() with a fetch
-   * to that provider's API, reading the key from storageService — never
-   * from source code.
+   * All providers are called with plain fetch() — this extension is
+   * deliberately build-free vanilla JS, so no SDK bundles. API keys come
+   * from storageService (user-supplied, device-local) — NEVER from code.
+   * Network access to each API origin is an optional permission the user
+   * grants only when they connect that provider.
    */
   const providers = {
     /** No provider configured — the honest default. */
     none: {
       id: "none",
       label: "Not configured",
-      configured: false,
+      needsKey: false,
+      defaultModel: "",
+      origin: null,
       async complete() {
         throw new Error(
           "No AI provider is configured. Plainly is running in glossary-only mode."
@@ -45,49 +50,142 @@
       },
     },
 
-    /** Placeholder: OpenAI (e.g. gpt-4o-mini). */
-    openai: {
-      id: "openai",
-      label: "OpenAI",
-      configured: false,
-      async complete(_prompt, _options) {
-        // FUTURE: POST https://api.openai.com/v1/chat/completions
-        // with a key from storageService — never hardcoded.
-        throw new Error("OpenAI provider not yet configured.");
-      },
-    },
-
-    /** Placeholder: Anthropic Claude. */
+    /** Anthropic Claude (default model: claude-opus-4-8). */
     claude: {
       id: "claude",
       label: "Claude",
-      configured: false,
-      async complete(_prompt, _options) {
-        // FUTURE: POST https://api.anthropic.com/v1/messages
-        throw new Error("Claude provider not yet configured.");
+      needsKey: true,
+      defaultModel: "claude-opus-4-8",
+      origin: "https://api.anthropic.com/*",
+      async complete(prompt, { apiKey, model }) {
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+            // Required by Anthropic for direct calls from a browser
+            // context. The key is the user's own, stored on their device.
+            "anthropic-dangerous-direct-browser-access": "true",
+          },
+          body: JSON.stringify({
+            model: model || this.defaultModel,
+            // Plainly's answers are deliberately short structured
+            // explanations, so a modest cap is appropriate here.
+            max_tokens: 4096,
+            messages: [{ role: "user", content: prompt }],
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data?.error?.message || `Claude API error ${response.status}`);
+        }
+        // Check stop_reason before reading content — newer Claude models
+        // can return a refusal with empty content.
+        if (data.stop_reason === "refusal") {
+          throw new Error("Claude declined to answer this request.");
+        }
+        const text = (data.content || [])
+          .filter((block) => block.type === "text")
+          .map((block) => block.text)
+          .join("\n")
+          .trim();
+        if (!text) throw new Error("Claude returned an empty response.");
+        return text;
       },
     },
 
-    /** Placeholder: Google Gemini. */
+    /** OpenAI (default model: gpt-4o-mini). */
+    openai: {
+      id: "openai",
+      label: "OpenAI",
+      needsKey: true,
+      defaultModel: "gpt-4o-mini",
+      origin: "https://api.openai.com/*",
+      async complete(prompt, { apiKey, model }) {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: model || this.defaultModel,
+            max_tokens: 4096,
+            messages: [{ role: "user", content: prompt }],
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data?.error?.message || `OpenAI API error ${response.status}`);
+        }
+        const text = data.choices?.[0]?.message?.content?.trim();
+        if (!text) throw new Error("OpenAI returned an empty response.");
+        return text;
+      },
+    },
+
+    /** Google Gemini (default model: gemini-2.0-flash). */
     gemini: {
       id: "gemini",
       label: "Gemini",
-      configured: false,
-      async complete(_prompt, _options) {
-        // FUTURE: POST to the Gemini generateContent endpoint.
-        throw new Error("Gemini provider not yet configured.");
+      needsKey: true,
+      defaultModel: "gemini-2.0-flash",
+      origin: "https://generativelanguage.googleapis.com/*",
+      async complete(prompt, { apiKey, model }) {
+        const m = encodeURIComponent(model || this.defaultModel);
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,
+          {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              "x-goog-api-key": apiKey,
+            },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+            }),
+          }
+        );
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data?.error?.message || `Gemini API error ${response.status}`);
+        }
+        const text = data.candidates?.[0]?.content?.parts
+          ?.map((p) => p.text || "")
+          .join("")
+          .trim();
+        if (!text) throw new Error("Gemini returned an empty response.");
+        return text;
       },
     },
 
-    /** Placeholder: a local model (e.g. Ollama on localhost). */
+    /** Local model via Ollama — best privacy: text never leaves the machine. */
     local: {
       id: "local",
-      label: "Local model",
-      configured: false,
-      async complete(_prompt, _options) {
-        // FUTURE: POST http://localhost:11434/api/generate (Ollama).
-        // Best privacy story: text never leaves the machine.
-        throw new Error("Local model provider not yet configured.");
+      label: "Local model (Ollama)",
+      needsKey: false,
+      defaultModel: "llama3.2",
+      origin: "http://localhost/*",
+      async complete(prompt, { model }) {
+        const response = await fetch("http://localhost:11434/api/generate", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            model: model || this.defaultModel,
+            prompt,
+            stream: false,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error(
+            `Local model error ${response.status}. Is Ollama running on localhost:11434?`
+          );
+        }
+        const data = await response.json();
+        const text = data.response?.trim();
+        if (!text) throw new Error("The local model returned an empty response.");
+        return text;
       },
     },
   };
@@ -95,8 +193,45 @@
   const translator = {
     providers,
 
-    /** The currently selected provider id. "none" until a user configures one. */
-    activeProvider: "none",
+    /**
+     * Resolve the user's current AI configuration from local storage.
+     * @returns {Promise<{provider: object, apiKey: string, model: string, configured: boolean}>}
+     */
+    async getAIConfig() {
+      const settings = await Plainly.storageService.getSettings();
+      const keys = await Plainly.storageService.getAiKeys();
+      const provider = providers[settings.aiProvider] || providers.none;
+      const apiKey = keys[provider.id] || "";
+      const configured =
+        provider.id !== "none" && (!provider.needsKey || apiKey.length > 0);
+      return {
+        provider,
+        apiKey,
+        model: settings.aiModel || provider.defaultModel,
+        configured,
+      };
+    },
+
+    /**
+     * Run one AI completion with the user's configured provider.
+     * Throws with a human-readable message on any failure.
+     */
+    async runAI(prompt) {
+      const config = await this.getAIConfig();
+      if (!config.configured) {
+        throw new Error("No AI provider is configured yet.");
+      }
+      return config.provider.complete(prompt, config);
+    },
+
+    /**
+     * Tiny connectivity check used by the popup's "Save & test" button —
+     * cheap, fast, and proves the key/model/permission all work together.
+     */
+    async testProvider() {
+      const answer = await this.runAI('Reply with exactly: OK');
+      return answer.length > 0;
+    },
 
     /**
      * Load a prompt template bundled with the extension (prompts/*.txt)
@@ -140,9 +275,10 @@
      *
      * @param {string} text - the selected text
      * @param {string} mode - explanation mode (beginner, adhd, ...)
+     * @param {{deeper?: boolean}} opts - deeper:true = user explicitly asked for AI
      * @returns {Promise<object>} structured translation result
      */
-    async translateSelection(text, mode = "beginner") {
+    async translateSelection(text, mode = "beginner", opts = {}) {
       const glossary = Plainly.glossaryService;
       await glossary.load();
 
@@ -169,30 +305,60 @@
       };
 
       // ---- Layer 2: escalate to AI only when worthwhile AND possible ---
-      if (this.shouldUseAI(text, terms)) {
-        const provider = providers[this.activeProvider];
-        if (provider && provider.configured) {
+      if (this.shouldUseAI(text, terms, opts.deeper === true)) {
+        const config = await this.getAIConfig();
+        if (config.configured) {
           try {
             const prompt = await this.buildPrompt("translate-selection", {
               selection: text,
               mode,
             });
-            const aiAnswer = await provider.complete(prompt, { mode });
+            const aiAnswer = await config.provider.complete(prompt, config);
+            // Parse the AI's labeled sections into our standard fields,
+            // keeping the raw text as a fallback for rendering.
+            const parsed = parseAIResponse(aiAnswer);
             result.source = "ai";
+            result.aiProvider = config.provider.label;
             result.aiAnswer = aiAnswer;
+            if (parsed.plainMeaning) result.plainMeaning = parsed.plainMeaning;
+            if (parsed.whyItMatters) result.whyItMatters = parsed.whyItMatters;
+            if (parsed.nextStep) result.nextStep = parsed.nextStep;
+            if (parsed.risks) result.risks = parsed.risks;
+            if (parsed.termsTranslated.length > 0) {
+              result.termsTranslated = parsed.termsTranslated;
+            }
           } catch (err) {
             // AI failed → keep the glossary answer, note the limitation.
-            result.note =
-              "Deeper AI explanation unavailable right now — showing the local glossary translation.";
+            result.note = `Deeper AI explanation unavailable (${err.message}) — showing the local glossary translation.`;
           }
         } else {
           // No provider configured. Be honest, never fake an AI answer.
           result.note =
-            "This passage goes beyond Plainly's built-in glossary. Connect an AI provider in a future update for deeper explanations.";
+            "This passage goes beyond Plainly's built-in glossary. Connect an AI provider in Settings for deeper explanations.";
         }
       }
 
       return result;
+    },
+
+    /**
+     * Free-form AI briefing for a whole page, using the summarize-page
+     * prompt template. Only called when the user clicks "Explain this
+     * page with AI" — never automatically.
+     * @param {object} pageInfo - {title, url, headings, buttons, bodySample}
+     * @param {string} mode
+     * @returns {Promise<string>} the AI's plain-English briefing
+     */
+    async explainPageWithAI(pageInfo, mode = "beginner") {
+      const prompt = await this.buildPrompt("summarize-page", {
+        title: pageInfo.title || "",
+        url: pageInfo.url || "",
+        headings: (pageInfo.headings || []).join("; "),
+        buttons: (pageInfo.buttons || []).join("; "),
+        bodySample: (pageInfo.bodySample || "").slice(0, 3000),
+        mode,
+      });
+      return this.runAI(prompt);
     },
 
     /**
@@ -235,6 +401,60 @@
       };
     },
   };
+
+  /* ------------------------------------------------------------------ *
+   *  AI RESPONSE PARSING
+   * ------------------------------------------------------------------ */
+
+  /**
+   * Parse the labeled sections our prompt templates ask for:
+   *   Plain Meaning: / Why It Matters: / Next Step: / Risks: / Terms Translated:
+   * Tolerant of missing sections and extra whitespace; anything that
+   * doesn't parse simply stays in the raw aiAnswer fallback.
+   */
+  function parseAIResponse(text) {
+    const labels = [
+      ["plainMeaning", "Plain Meaning"],
+      ["whyItMatters", "Why It Matters"],
+      ["nextStep", "Next Step"],
+      ["risks", "Risks"],
+      ["terms", "Terms Translated"],
+    ];
+    const sections = {};
+
+    for (let i = 0; i < labels.length; i++) {
+      const [key, label] = labels[i];
+      // Capture from this label until the next known label or end of text.
+      const others = labels.map(([, l]) => l).join("|");
+      const re = new RegExp(
+        `(?:^|\\n)\\s*\\**${label}\\**\\s*:?\\s*\\n?([\\s\\S]*?)(?=(?:\\n\\s*\\**(?:${others})\\**\\s*:)|$)`,
+        "i"
+      );
+      const m = text.match(re);
+      if (m) sections[key] = m[1].trim();
+    }
+
+    // "Terms Translated" arrives as a bulleted list; split into pairs.
+    const termsTranslated = [];
+    if (sections.terms) {
+      for (const line of sections.terms.split("\n")) {
+        const clean = line.replace(/^[\s*•-]+/, "").trim();
+        if (!clean) continue;
+        const [term, ...rest] = clean.split(/\s*(?:→|—|:|-)\s*/);
+        if (term && rest.length > 0) {
+          termsTranslated.push({ term: term.trim(), meaning: rest.join(" ").trim() });
+        }
+      }
+    }
+
+    return {
+      plainMeaning: sections.plainMeaning || "",
+      whyItMatters: sections.whyItMatters || "",
+      nextStep: sections.nextStep || "",
+      risks: sections.risks && !/^none\.?$/i.test(sections.risks) ? sections.risks : "",
+      termsTranslated,
+    };
+  }
 
   /* ------------------------------------------------------------------ *
    *  GLOSSARY-POWERED RESPONSE BUILDERS

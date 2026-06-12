@@ -102,6 +102,55 @@
       <input type="checkbox" id="toggle-replace" />
     </div>
 
+    <!-- ============ AI ASSISTANCE (optional) ============ -->
+    <div class="setting-row">
+      <label for="ai-provider" class="setting-label">
+        AI assistance (optional)
+        <span class="setting-hint">For deeper explanations beyond the built-in glossary</span>
+      </label>
+      <select id="ai-provider" class="setting-select">
+        <option value="none">Off — glossary only (default)</option>
+        <option value="claude">Claude (Anthropic)</option>
+        <option value="openai">OpenAI</option>
+        <option value="gemini">Gemini (Google)</option>
+        <option value="local">Local model (Ollama) — most private</option>
+      </select>
+    </div>
+
+    <div class="setting-row" id="ai-key-row" hidden>
+      <label for="ai-key" class="setting-label">API key</label>
+      <input
+        type="password"
+        id="ai-key"
+        class="glossary-search"
+        placeholder="Paste your API key"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="setting-row" id="ai-model-row" hidden>
+      <label for="ai-model" class="setting-label">
+        Model
+        <span class="setting-hint" id="ai-model-hint"></span>
+      </label>
+      <input
+        type="text"
+        id="ai-model"
+        class="glossary-search"
+        placeholder=""
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="setting-row" id="ai-save-row" hidden>
+      <button id="btn-ai-save" class="copy-btn copy-btn-wide">Save &amp; test connection</button>
+      <p id="ai-status" class="popup-status" role="status"></p>
+      <p class="setting-hint">
+        Your key is stored only on this device and sent only to the provider
+        you chose, only when you ask for a deeper explanation.
+      </p>
+    </div>
+
     <!-- Required privacy statement -->
     <p class="privacy-note">
       <strong>Your privacy:</strong> We only translate text you interact with.
@@ -112,6 +161,7 @@
 
   <script src="services/storageService.js"></script>
   <script src="services/glossaryService.js"></script>
+  <script src="services/translator.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

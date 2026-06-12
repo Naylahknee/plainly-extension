@@ -520,6 +520,9 @@ section.panel-card .card-heading { cursor: default; }
 .copy-btn:focus-visible { outline: 2px solid var(--plainly-ink); outline-offset: 2px; }
 .copy-btn-wide { width: 100%; }
 
+/* AI briefing text keeps the model's paragraph breaks */
+.ai-briefing { white-space: pre-wrap; }
+
 .panel-note {
   margin: 4px 0 0;
   font-size: 12px;
