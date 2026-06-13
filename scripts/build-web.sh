@@ -20,8 +20,9 @@ cp services/storageService.js services/glossaryService.js services/translator.js
 cp glossary.json "$OUT/"
 cp prompts/*.txt "$OUT/prompts/"
 
-# Icons (192/512 for PWA installs + favicons)
-python3 scripts/make_icons.py --sizes 192,512 --out "$OUT/icons"
+# Icons (192/512 for PWA installs + favicons) — committed under web/icons
+# so the build is pure copy (no Python needed in CI / Vercel build image).
+cp web/icons/icon192.png web/icons/icon512.png "$OUT/icons/"
 
 echo "Built $OUT"
 find "$OUT" -type f | sort
