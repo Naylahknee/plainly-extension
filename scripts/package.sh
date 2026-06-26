@@ -19,6 +19,7 @@ zip -r "$OUT" \
   sidepanel.html sidepanel.js \
   styles.css \
   glossary.json \
+  glossary \
   services \
   prompts \
   assets \

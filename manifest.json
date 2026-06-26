@@ -60,7 +60,10 @@
     "https://code.claude.com/*",
     "https://zapier.com/*",
     "https://*.zapier.com/*",
-    "https://developers.notion.com/*"
+    "https://developers.notion.com/*",
+    "https://*.docusign.com/*",
+    "https://*.hellosign.com/*",
+    "https://app.ironcladapp.com/*"
   ],
 
   "content_scripts": [
@@ -80,7 +83,10 @@
         "https://code.claude.com/*",
         "https://zapier.com/*",
         "https://*.zapier.com/*",
-        "https://developers.notion.com/*"
+        "https://developers.notion.com/*",
+        "https://*.docusign.com/*",
+        "https://*.hellosign.com/*",
+        "https://app.ironcladapp.com/*"
       ],
       "js": [
         "services/storageService.js",

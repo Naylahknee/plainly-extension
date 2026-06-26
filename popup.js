@@ -23,6 +23,7 @@
   const glossarySection = $("glossary-section");
   const glossarySearch = $("glossary-search");
   const glossaryList = $("glossary-list");
+  const domainSelect = $("domain-select");
   const modeSelect = $("mode-select");
   const toggleReplace = $("toggle-replace");
   const aiProviderSelect = $("ai-provider");
@@ -77,7 +78,19 @@
         : "Plainly is paused. Flip the switch to turn it back on."
     );
 
-    await glossaryService.load();
+    // ---- Domain picker ----
+    const packs = await glossaryService.listPacks();
+    domainSelect.replaceChildren(
+      ...packs.map((p) => {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = p.label;
+        return opt;
+      })
+    );
+    const activeDomain = settings.activeDomain || glossaryService.defaultDomain;
+    domainSelect.value = activeDomain;
+    await glossaryService.load(activeDomain);
 
     // ---- AI settings ----
     aiProviderSelect.value = settings.aiProvider || "none";
@@ -230,6 +243,16 @@
   /* ====================================================================
    *  SETTINGS
    * ==================================================================== */
+
+  domainSelect.addEventListener("change", async () => {
+    const domain = domainSelect.value;
+    await storageService.updateSettings({ activeDomain: domain });
+    await glossaryService.load(domain);
+    // Keep the in-popup glossary browser in sync if it's open.
+    if (!glossarySection.hidden) renderGlossary(glossarySearch.value.trim().toLowerCase());
+    const pack = glossaryService.getPack(domain);
+    setStatus(`Domain set to ${pack ? pack.label : domain}.`);
+  });
 
   modeSelect.addEventListener("change", async () => {
     await storageService.updateSettings({ mode: modeSelect.value });

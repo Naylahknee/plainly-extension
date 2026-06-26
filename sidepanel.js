@@ -17,7 +17,7 @@
  */
 
 (function () {
-  const { storageService, translator } = globalThis.Plainly;
+  const { storageService, translator, glossaryService } = globalThis.Plainly;
 
   const PENDING_SELECTION_KEY = "plainlyPendingSelection";
   const $ = (id) => document.getElementById(id);
@@ -63,9 +63,19 @@
     $("ai-page-card").hidden = true;
   }
 
-  function renderUnsupported() {
+  async function renderUnsupported() {
+    // List the supported sites for whichever domain is active, so the
+    // message stays accurate as packs are added.
+    let sites = "supported sites";
+    try {
+      const packs = await glossaryService.listPacks();
+      const names = packs
+        .flatMap((p) => (p.sitePatterns || []).map((s) => s.name))
+        .filter(Boolean);
+      if (names.length) sites = names.join(", ");
+    } catch { /* fall back to the generic phrasing */ }
     $("page-summary").textContent =
-      "Plainly can't read this page. It currently works on technical sites like GitHub, Vercel, Netlify, Stripe, OpenAI docs, Zapier, and Notion's developer docs.";
+      `Plainly can't read this page. It works on its supported sites — currently ${sites} — and on any text you paste into the Plainly web app.`;
     $("page-asking").textContent = "—";
     $("risk-badge").textContent = "n/a";
     $("risk-message").textContent = "";
@@ -265,6 +275,12 @@
       ...r.termsTranslated.map((t) => `- ${t.term}: ${t.meaning}`),
     ].join("\n");
     await copy(text, "Explanation copied.");
+  });
+
+  // Export the canonical PlainlyResult as JSON — uniform labeled data.
+  $("btn-copy-json").addEventListener("click", async () => {
+    if (!lastSelectionResult) return;
+    await copy(JSON.stringify(lastSelectionResult, null, 2), "Copied as JSON.");
   });
 
   $("btn-copy-all").addEventListener("click", async () => {

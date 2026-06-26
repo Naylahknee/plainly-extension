@@ -57,7 +57,7 @@
 
   async function boot() {
     settings = await storageService.getSettings();
-    await glossaryService.load();
+    await glossaryService.load(settings.activeDomain);
 
     if (settings.enabled) {
       scanAndHighlight(document.body);
@@ -68,7 +68,19 @@
     storageService.onSettingsChanged((next) => {
       const wasEnabled = settings.enabled;
       const wasReplace = settings.replaceMode;
+      const wasDomain = settings.activeDomain;
       settings = next;
+
+      if (next.activeDomain !== wasDomain) {
+        // Domain switched: load the new pack, then rebuild highlights so
+        // the page reflects the new vocabulary.
+        (async () => {
+          removeAllHighlights();
+          await glossaryService.load(next.activeDomain);
+          if (next.enabled) scanAndHighlight(document.body);
+        })();
+        return;
+      }
 
       if (!wasEnabled && next.enabled) {
         scanAndHighlight(document.body);
