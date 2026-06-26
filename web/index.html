@@ -15,10 +15,11 @@
 
   <header class="app-header">
     <span class="logo" aria-hidden="true"></span>
-    <div>
+    <div class="app-title">
       <h1>Plainly</h1>
-      <p class="tagline">Tech, in plain English</p>
+      <p class="tagline" id="tagline">Tech, in plain English</p>
     </div>
+    <select id="domain-select" class="domain-select" aria-label="Knowledge domain"></select>
   </header>
 
   <main class="app-main">
@@ -63,6 +64,7 @@
       <p id="out-note" class="note" hidden></p>
       <div class="controls">
         <button id="btn-copy" class="ghost-btn">Copy explanation</button>
+        <button id="btn-copy-json" class="ghost-btn">Copy as JSON</button>
         <button id="btn-ai-deeper" class="ghost-btn" hidden>Explain deeper with AI</button>
       </div>
     </section>

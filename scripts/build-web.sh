@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 
 OUT="dist/web"
 rm -rf "$OUT"
-mkdir -p "$OUT/services" "$OUT/prompts" "$OUT/icons"
+mkdir -p "$OUT/services" "$OUT/prompts" "$OUT/icons" "$OUT/glossary"
 
 # Web app shell
 cp web/index.html web/app.js web/shim.js web/styles.css \
@@ -17,7 +17,8 @@ cp web/index.html web/app.js web/shim.js web/styles.css \
 # Shared engine — the exact same files the extension ships
 cp services/storageService.js services/glossaryService.js services/translator.js \
    "$OUT/services/"
-cp glossary.json "$OUT/"
+cp glossary.json "$OUT/"            # legacy/default tech pack at root
+cp glossary/*.json "$OUT/glossary/" # packs.json + per-domain packs (legal, ...)
 cp prompts/*.txt "$OUT/prompts/"
 
 # Icons (192/512 for PWA installs + favicons) — committed under web/icons

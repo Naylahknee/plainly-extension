@@ -265,6 +265,25 @@
     },
 
     /**
+     * Resolve the active knowledge domain and its pack metadata from
+     * settings. Every translation reads this so site names, risk words,
+     * and prompt framing all match the chosen domain (tech, legal, ...).
+     * @returns {Promise<{domain: string, pack: object, domainLabel: string}>}
+     */
+    async activeContext() {
+      const settings = await Plainly.storageService.getSettings();
+      const glossary = Plainly.glossaryService;
+      await glossary.loadPacks();
+      const domain = settings.activeDomain || glossary.defaultDomain || "tech";
+      const pack = glossary.getPack(domain) || {};
+      return {
+        domain,
+        pack,
+        domainLabel: pack.promptDomainLabel || "complex documents",
+      };
+    },
+
+    /**
      * Translate a user-selected piece of text into Plainly's standard
      * four-part response:
      *
@@ -273,14 +292,33 @@
      * Strategy: glossary first; AI only if needed AND configured;
      * honest fallback otherwise.
      *
+     * Always returns a canonical PlainlyResult (see @typedef below): every
+     * field is present even when empty, so output is uniform and reusable
+     * like labeled data, whether it came from the glossary or the AI.
+     *
      * @param {string} text - the selected text
      * @param {string} mode - explanation mode (beginner, adhd, ...)
      * @param {{deeper?: boolean}} opts - deeper:true = user explicitly asked for AI
-     * @returns {Promise<object>} structured translation result
+     * @returns {Promise<PlainlyResult>} structured translation result
+     *
+     * @typedef {Object} PlainlyResult
+     * @property {number} schemaVersion
+     * @property {string} domain - active pack id, e.g. "legal"
+     * @property {"glossary"|"ai"} source
+     * @property {string} original
+     * @property {string} plainMeaning   - always present
+     * @property {string} whyItMatters   - always present
+     * @property {string} nextStep       - always present
+     * @property {string} risks          - "" when none (key always present)
+     * @property {Array<{term:string, meaning:string}>} termsTranslated - [] not undefined
+     * @property {string} note           - "" when none
+     * @property {?string} aiProvider    - null on the glossary path
+     * @property {?string} aiAnswer      - raw AI text, null on glossary path
      */
     async translateSelection(text, mode = "beginner", opts = {}) {
       const glossary = Plainly.glossaryService;
-      await glossary.load();
+      const { domain, domainLabel } = await this.activeContext();
+      await glossary.load(domain);
 
       const terms = glossary.uniqueTerms(text);
       const termDetails = terms
@@ -292,16 +330,23 @@
       // glosses in parentheses — much more readable than raw substitution.
       const annotated = glossary.annotate(text);
 
+      // Canonical PlainlyResult — ALL keys present, empty where unused.
       const result = {
+        schemaVersion: 1,
+        domain,
         source: "glossary",
         original: text,
         plainMeaning: buildPlainMeaning(text, annotated, termDetails, mode),
         whyItMatters: buildWhy(termDetails),
         nextStep: buildNextStep(termDetails),
+        risks: "",
         termsTranslated: termDetails.map((d) => ({
           term: d.title,
           meaning: d.simple,
         })),
+        note: "",
+        aiProvider: null,
+        aiAnswer: null,
       };
 
       // ---- Layer 2: escalate to AI only when worthwhile AND possible ---
@@ -312,6 +357,7 @@
             const prompt = await this.buildPrompt("translate-selection", {
               selection: text,
               mode,
+              domain: domainLabel,
             });
             const aiAnswer = await config.provider.complete(prompt, config);
             // Parse the AI's labeled sections into our standard fields,
@@ -350,6 +396,7 @@
      * @returns {Promise<string>} the AI's plain-English briefing
      */
     async explainPageWithAI(pageInfo, mode = "beginner") {
+      const { domainLabel } = await this.activeContext();
       const prompt = await this.buildPrompt("summarize-page", {
         title: pageInfo.title || "",
         url: pageInfo.url || "",
@@ -357,6 +404,7 @@
         buttons: (pageInfo.buttons || []).join("; "),
         bodySample: (pageInfo.bodySample || "").slice(0, 3000),
         mode,
+        domain: domainLabel,
       });
       return this.runAI(prompt);
     },
@@ -371,7 +419,8 @@
      */
     async summarizePage(pageInfo, mode = "beginner") {
       const glossary = Plainly.glossaryService;
-      await glossary.load();
+      const { domain, pack } = await this.activeContext();
+      await glossary.load(domain);
 
       const allText = [
         pageInfo.title,
@@ -389,14 +438,14 @@
           ...(pageInfo.highlightedTerms || []),
         ]),
       ];
-      const site = identifySite(pageInfo.url || "");
+      const site = identifySite(pageInfo.url || "", pack);
 
       return {
         summary: buildPageSummary(pageInfo, site, terms, glossary, mode),
         asking: buildPageAsking(pageInfo, site),
         terms: terms.map((t) => glossary.explain(t, mode)).filter(Boolean),
         nextSteps: buildPageNextSteps(pageInfo, site, terms, glossary),
-        risk: assessPageRisk(allText, terms, glossary),
+        risk: assessPageRisk(allText, terms, glossary, pack),
         site,
       };
     },
@@ -464,7 +513,7 @@
   function buildPlainMeaning(original, annotated, termDetails, mode) {
     if (termDetails.length === 0) {
       return (
-        "No technical jargon from Plainly's glossary was found here — " +
+        "No jargon from Plainly's glossary was found here — " +
         "this text may already be in plain language, or it uses terms we don't know yet."
       );
     }
@@ -498,22 +547,20 @@
    *  PAGE-LEVEL HELPERS (used by the side panel)
    * ------------------------------------------------------------------ */
 
-  /** Friendly identities for the MVP's supported sites. */
-  const KNOWN_SITES = [
-    { match: "github.com", name: "GitHub", purpose: "a place where people store projects and collaborate on changes to them" },
-    { match: "vercel.com", name: "Vercel", purpose: "a service that publishes websites and apps online" },
-    { match: "netlify", name: "Netlify", purpose: "a service that publishes websites online" },
-    { match: "stripe.com", name: "Stripe", purpose: "a service that handles online payments" },
-    { match: "platform.openai.com", name: "OpenAI's developer docs", purpose: "instructions for connecting apps to OpenAI's AI models" },
-    { match: "docs.anthropic.com", name: "Anthropic's docs", purpose: "instructions for connecting apps to Claude" },
-    { match: "code.claude.com", name: "Claude Code's docs", purpose: "instructions for using Claude's coding assistant" },
-    { match: "zapier.com", name: "Zapier", purpose: "a tool that connects your apps so they work together automatically" },
-    { match: "developers.notion.com", name: "Notion's developer docs", purpose: "instructions for connecting apps to Notion" },
-  ];
-
-  function identifySite(url) {
-    const found = KNOWN_SITES.find((s) => url.includes(s.match));
-    return found || { name: "this site", purpose: "a technical website" };
+  /**
+   * Identify the current site from the active pack's sitePatterns, so page
+   * summaries name the site in domain-appropriate language. Falls back to a
+   * generic identity described by the pack's domain label.
+   */
+  function identifySite(url, pack) {
+    const patterns = (pack && pack.sitePatterns) || [];
+    const found = patterns.find((s) => url.includes(s.match));
+    return (
+      found || {
+        name: "this site",
+        purpose: (pack && pack.promptDomainLabel) || "a complex website",
+      }
+    );
   }
 
   function buildPageSummary(pageInfo, site, terms, glossary, mode) {
@@ -565,15 +612,16 @@
 
   /**
    * Very simple risk heuristic: highest risk level among detected terms,
-   * plus a scan for inherently sensitive words (delete, billing, etc.).
+   * plus a scan for the active pack's sensitive words (delete/billing for
+   * tech; waive/indemnify/auto-renew for legal; etc.).
    */
-  function assessPageRisk(text, terms, glossary) {
+  function assessPageRisk(text, terms, glossary, pack) {
     const lower = text.toLowerCase();
-    const dangerWords = ["delete", "remove permanently", "billing", "payment", "charge", "irreversible", "cannot be undone", "danger zone"];
+    const dangerWords = (pack && pack.riskWords) || [];
     if (dangerWords.some((w) => lower.includes(w))) {
       return {
         level: "high",
-        message: "This page mentions deleting things or money. Read twice before confirming anything.",
+        message: "This page mentions sensitive or costly actions. Read twice before confirming anything.",
       };
     }
     const levels = terms.map((t) => (glossary.explain(t) || {}).risk);

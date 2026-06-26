@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "default": "tech",
+  "packs": [
+    {
+      "id": "tech",
+      "label": "Tech & developer tools",
+      "tagline": "Tech, in plain English",
+      "example": "e.g. “Your build failed because of a missing environment variable. Commit your changes and redeploy.”",
+      "promptDomainLabel": "technical websites and developer tools",
+      "file": "glossary.json",
+      "riskWords": [
+        "delete",
+        "remove permanently",
+        "billing",
+        "payment",
+        "charge",
+        "irreversible",
+        "cannot be undone",
+        "danger zone"
+      ],
+      "sitePatterns": [
+        { "match": "github.com", "name": "GitHub", "purpose": "a place where people store projects and collaborate on changes to them" },
+        { "match": "vercel.com", "name": "Vercel", "purpose": "a service that publishes websites and apps online" },
+        { "match": "netlify", "name": "Netlify", "purpose": "a service that publishes websites online" },
+        { "match": "stripe.com", "name": "Stripe", "purpose": "a service that handles online payments" },
+        { "match": "platform.openai.com", "name": "OpenAI's developer docs", "purpose": "instructions for connecting apps to OpenAI's AI models" },
+        { "match": "docs.anthropic.com", "name": "Anthropic's docs", "purpose": "instructions for connecting apps to Claude" },
+        { "match": "code.claude.com", "name": "Claude Code's docs", "purpose": "instructions for using Claude's coding assistant" },
+        { "match": "zapier.com", "name": "Zapier", "purpose": "a tool that connects your apps so they work together automatically" },
+        { "match": "developers.notion.com", "name": "Notion's developer docs", "purpose": "instructions for connecting apps to Notion" }
+      ]
+    },
+    {
+      "id": "legal",
+      "label": "Legal & contracts",
+      "tagline": "Contracts, in plain English",
+      "example": "e.g. “The parties agree to indemnify and hold harmless the Company from any claims, and this Agreement shall auto-renew unless terminated with 30 days' notice.”",
+      "promptDomainLabel": "legal documents and contracts",
+      "file": "glossary/legal.json",
+      "riskWords": [
+        "waive",
+        "waiver",
+        "indemnify",
+        "liable",
+        "liability",
+        "perpetual",
+        "irrevocable",
+        "binding",
+        "penalty",
+        "forfeit",
+        "terminate",
+        "auto-renew",
+        "automatic renewal",
+        "non-refundable",
+        "personal guarantee"
+      ],
+      "sitePatterns": [
+        { "match": "docusign.com", "name": "DocuSign", "purpose": "a service for signing documents electronically" },
+        { "match": "hellosign.com", "name": "Dropbox Sign", "purpose": "a service for signing documents electronically" },
+        { "match": "ironcladapp.com", "name": "Ironclad", "purpose": "a tool for managing and signing contracts" }
+      ]
+    }
+  ]
+}

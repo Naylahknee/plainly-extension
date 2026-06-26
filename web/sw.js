@@ -3,7 +3,7 @@
  * Cache-first for the app shell so the glossary translator works fully
  * offline. AI requests (POSTs to provider APIs) are never intercepted.
  */
-const CACHE = "plainly-web-v1";
+const CACHE = "plainly-web-v2";
 const SHELL = [
   ".",
   "index.html",
@@ -11,6 +11,8 @@ const SHELL = [
   "shim.js",
   "app.js",
   "glossary.json",
+  "glossary/packs.json",
+  "glossary/legal.json",
   "services/storageService.js",
   "services/glossaryService.js",
   "services/translator.js",

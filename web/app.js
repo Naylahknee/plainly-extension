@@ -110,6 +110,49 @@
     } catch { /* clipboard unavailable */ }
   });
 
+  // Copy the canonical PlainlyResult as JSON — the labeled-data export.
+  // lastResult already IS the PlainlyResult, so no reshaping is needed.
+  $("btn-copy-json").addEventListener("click", async () => {
+    if (!lastResult) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(lastResult, null, 2));
+      $("btn-copy-json").textContent = "Copied JSON!";
+      setTimeout(() => ($("btn-copy-json").textContent = "Copy as JSON"), 1500);
+    } catch { /* clipboard unavailable */ }
+  });
+
+  /* ================= DOMAIN PICKER ================= */
+
+  const domainSelect = $("domain-select");
+
+  /** Apply a pack's cosmetic identity: tagline, page title, example. */
+  function applyPack(pack) {
+    if (!pack) return;
+    if (pack.tagline) {
+      $("tagline").textContent = pack.tagline;
+      document.title = `Plainly — ${pack.tagline}`;
+    }
+    if (pack.example) $("input-text").placeholder = pack.example;
+  }
+
+  /** Load a domain's glossary and refresh the offline-term count. */
+  async function loadDomain(domain) {
+    await glossaryService.load(domain);
+    const pack = glossaryService.getPack(domain);
+    applyPack(pack);
+    $("glossary-count").textContent =
+      `${Object.keys(glossaryService.entries).length} terms in the offline ${pack ? pack.label.toLowerCase() : domain} glossary`;
+  }
+
+  domainSelect.addEventListener("change", async () => {
+    const domain = domainSelect.value;
+    await storageService.updateSettings({ activeDomain: domain });
+    await loadDomain(domain);
+    // A previous result belongs to the old domain — clear it to avoid confusion.
+    $("result-card").hidden = true;
+    lastResult = null;
+  });
+
   /* ================= AI SETTINGS ================= */
 
   const aiProvider = $("ai-provider");
@@ -172,11 +215,22 @@
   /* ================= BOOT ================= */
 
   (async () => {
-    await glossaryService.load();
-    $("glossary-count").textContent =
-      `${Object.keys(glossaryService.entries).length} terms in the offline glossary`;
-
     const settings = await storageService.getSettings();
+
+    // Populate the domain picker from the pack manifest.
+    const packs = await glossaryService.listPacks();
+    domainSelect.replaceChildren(
+      ...packs.map((p) => {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = p.label;
+        return opt;
+      })
+    );
+    const activeDomain = settings.activeDomain || glossaryService.defaultDomain;
+    domainSelect.value = activeDomain;
+    await loadDomain(activeDomain);
+
     $("mode-select").value = settings.mode;
     aiProvider.value = settings.aiProvider || "none";
     aiModel.value = settings.aiModel || "";

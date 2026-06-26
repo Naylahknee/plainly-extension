@@ -39,6 +39,10 @@
     // Whether tooltips appear on hover (true) or only on click/focus (false).
     tooltipsOnHover: true,
 
+    // Which knowledge domain/pack is active. "tech" | "legal" | ...
+    // Merge-over-defaults means existing users transparently get "tech".
+    activeDomain: "tech",
+
     // ---- AI assistance (optional, OFF by default) ----
     // Which AI provider to use for deeper explanations.
     // "none" | "claude" | "openai" | "gemini" | "local"

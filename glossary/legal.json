@@ -1,0 +1,291 @@
+{
+  "_meta": {
+    "version": 1,
+    "domain": "legal",
+    "description": "Plainly's legal & contracts pack. Plain-English meanings for everyday legal documents — leases, contracts, terms of service. Not legal advice; for big decisions, talk to a lawyer.",
+    "fields": "see glossary.json _meta / SCHEMA.md"
+  },
+
+  "indemnify": {
+    "simple": "agree to cover someone else's losses",
+    "detailed": "If you indemnify someone, you promise to pay for certain costs, damages, or legal claims they face — often ones caused by your actions. It shifts financial risk onto you.",
+    "why": "An indemnity clause can make you responsible for large, open-ended costs, sometimes more than the deal is worth.",
+    "next": "Find out exactly what you'd be covering and whether there's a dollar cap. Consider asking a lawyer before signing an uncapped indemnity.",
+    "aliases": ["indemnity", "indemnification", "hold harmless", "indemnified", "indemnifies"],
+    "category": "liability",
+    "risk": "high"
+  },
+  "limitation of liability": {
+    "simple": "a cap on how much they'll ever owe you",
+    "detailed": "A clause that limits how much one side has to pay if something goes wrong — often capped at the amount you paid them, no matter how big your actual loss.",
+    "why": "If their service causes you a large loss, this clause can leave you recovering only a small fraction of it.",
+    "aliases": ["liability cap", "limited liability", "limitation of liabilities"],
+    "category": "liability",
+    "risk": "high"
+  },
+  "liability": {
+    "simple": "legal responsibility for harm or loss",
+    "detailed": "Being legally on the hook for something — usually money owed when someone is harmed or a promise is broken.",
+    "aliases": ["liable", "liabilities"],
+    "category": "liability",
+    "risk": "medium"
+  },
+  "arbitration": {
+    "simple": "settle disputes privately instead of in court",
+    "detailed": "A clause that says disagreements are decided by a private arbitrator rather than a public court. The decision is usually final and hard to appeal.",
+    "why": "It often means giving up your right to sue in court or join a class action — and arbitration can favor the company that wrote the contract.",
+    "next": "Check whether arbitration is required and whether you can opt out (some contracts give a short window to do so).",
+    "aliases": ["binding arbitration", "arbitrate", "arbitrator", "arbitration clause"],
+    "category": "disputes",
+    "risk": "high"
+  },
+  "class action waiver": {
+    "simple": "you give up the right to join a group lawsuit",
+    "detailed": "A promise that you'll only bring claims on your own — never as part of a group of people suing together over the same problem.",
+    "why": "Group lawsuits are often the only practical way to challenge a big company over small individual harms. Waiving this removes that option.",
+    "aliases": ["class action waivers", "no class action", "waiver of class action"],
+    "category": "disputes",
+    "risk": "high"
+  },
+  "severability": {
+    "simple": "if one part is invalid, the rest still stands",
+    "detailed": "A clause saying that if a court throws out one part of the contract, the remaining parts stay in force.",
+    "aliases": ["severable", "severability clause"],
+    "category": "contracts",
+    "risk": "low"
+  },
+  "force majeure": {
+    "simple": "an 'unforeseeable disaster' escape clause",
+    "detailed": "A clause that excuses one or both sides from their obligations when something extraordinary and outside their control happens — like a natural disaster, war, or pandemic.",
+    "why": "It decides who bears the loss when events make the contract impossible to perform. A narrow clause may not protect you in a crisis.",
+    "next": "Check what events are actually listed and whether your situation would qualify.",
+    "aliases": ["act of god", "force majeure clause"],
+    "category": "contracts",
+    "risk": "medium"
+  },
+  "nda": {
+    "simple": "a promise to keep information secret",
+    "detailed": "A Non-Disclosure Agreement: a contract where you agree not to share certain confidential information you're given. Breaking it can mean being sued.",
+    "why": "An overly broad NDA can restrict what you're allowed to say or do for years — read what counts as 'confidential' and for how long.",
+    "aliases": ["non-disclosure agreement", "ndas", "confidentiality agreement"],
+    "category": "privacy",
+    "risk": "medium",
+    "replaceable": false
+  },
+  "confidentiality": {
+    "simple": "the duty to keep certain information private",
+    "detailed": "An obligation to protect specific information and not share it with others outside the agreement.",
+    "aliases": ["confidential", "confidentiality clause"],
+    "category": "privacy",
+    "risk": "medium"
+  },
+  "jurisdiction": {
+    "simple": "which place's courts and laws apply",
+    "detailed": "The location whose courts have authority over disputes about the contract. It can decide where you'd have to go to sue or be sued.",
+    "why": "If a dispute means traveling to a far-away court, that alone can make it impractical to defend yourself.",
+    "aliases": ["jurisdictions"],
+    "category": "disputes",
+    "risk": "medium"
+  },
+  "governing law": {
+    "simple": "which state or country's laws control the contract",
+    "detailed": "The set of laws used to interpret the agreement — for example, 'governed by the laws of Delaware.'",
+    "aliases": ["choice of law", "governed by", "choice of forum", "forum selection"],
+    "category": "disputes",
+    "risk": "low"
+  },
+  "warranty": {
+    "simple": "a promise that something is as described",
+    "detailed": "A guarantee about a product, service, or fact — for example, that software will work as described or that goods are free of defects.",
+    "aliases": ["warranties", "warrant", "warranted"],
+    "category": "contracts",
+    "risk": "low"
+  },
+  "disclaimer of warranties": {
+    "simple": "they promise nothing about quality ('as is')",
+    "detailed": "A clause saying the product or service is provided 'as is,' with no guarantees that it will work, be accurate, or fit your needs.",
+    "why": "If it breaks or fails, you usually can't claim they promised otherwise.",
+    "aliases": ["as is", "as-is", "no warranty", "warranty disclaimer", "without warranty"],
+    "category": "liability",
+    "risk": "medium"
+  },
+  "termination clause": {
+    "simple": "the rules for ending the agreement",
+    "detailed": "The part of the contract that says how, when, and by whom the agreement can be ended — and what happens afterward.",
+    "next": "Note how much notice you must give and whether ending early costs you anything.",
+    "aliases": ["termination", "terminate", "right to terminate", "termination for convenience"],
+    "category": "termination",
+    "risk": "medium"
+  },
+  "auto-renewal": {
+    "simple": "the contract renews itself unless you cancel in time",
+    "detailed": "The agreement automatically continues for another term unless you give notice to cancel before a deadline. Miss the window and you're locked in for another full period.",
+    "why": "People often get charged for a renewal they forgot about because the cancellation deadline passed.",
+    "next": "Note the cancellation deadline and notice method now, and set a reminder well before it.",
+    "aliases": ["automatic renewal", "auto renew", "auto-renew", "evergreen clause", "renews automatically"],
+    "category": "payment",
+    "risk": "high"
+  },
+  "breach": {
+    "simple": "breaking a promise in the contract",
+    "detailed": "Failing to do something the contract requires (or doing something it forbids). A 'material breach' is a serious one that can let the other side end the deal or sue.",
+    "aliases": ["breach of contract", "material breach", "breached", "in breach"],
+    "category": "contracts",
+    "risk": "medium"
+  },
+  "damages": {
+    "simple": "money owed to make up for harm",
+    "detailed": "The compensation one side pays the other for losses caused by breaking the contract.",
+    "aliases": ["compensatory damages", "actual damages"],
+    "category": "disputes",
+    "risk": "medium"
+  },
+  "liquidated damages": {
+    "simple": "a pre-agreed penalty amount for breaking the deal",
+    "detailed": "A fixed sum the contract says you'll pay if you break a specific promise, set in advance instead of calculated later.",
+    "why": "You could owe this amount even if the other side's real loss was small — check the number before signing.",
+    "aliases": ["liquidated damages clause"],
+    "category": "payment",
+    "risk": "high"
+  },
+  "waiver": {
+    "simple": "giving up a right on purpose",
+    "detailed": "Voluntarily letting go of a legal right or claim — for example, waiving your right to a refund or to sue.",
+    "aliases": ["waive", "waived", "waiver of rights"],
+    "category": "disputes",
+    "risk": "high"
+  },
+  "non-compete": {
+    "simple": "a promise not to work for rivals for a while",
+    "detailed": "A clause restricting you from working for competitors or starting a competing business for a set time and area after the deal ends.",
+    "why": "It can limit your future job options — check how long it lasts and how wide the restriction is.",
+    "aliases": ["noncompete", "non-compete clause", "covenant not to compete", "non competition"],
+    "category": "termination",
+    "risk": "high"
+  },
+  "non-solicitation": {
+    "simple": "a promise not to poach their clients or staff",
+    "detailed": "A clause stopping you from recruiting the other side's employees or customers for a period after the agreement ends.",
+    "aliases": ["nonsolicitation", "non-solicit", "non-solicitation clause"],
+    "category": "termination",
+    "risk": "medium"
+  },
+  "assignment": {
+    "simple": "handing the contract over to someone else",
+    "detailed": "Transferring your rights or duties under the contract to another party. Many contracts limit when this is allowed.",
+    "aliases": ["assign", "assignability", "assignment clause", "no assignment"],
+    "category": "contracts",
+    "risk": "low"
+  },
+  "representations and warranties": {
+    "simple": "facts each side swears are true",
+    "detailed": "Statements of fact (representations) and promises (warranties) that each side guarantees — if they turn out false, the other side may have a claim.",
+    "aliases": ["reps and warranties", "representation", "represents and warrants"],
+    "category": "contracts",
+    "risk": "medium"
+  },
+  "covenant": {
+    "simple": "a formal promise to do or not do something",
+    "detailed": "A binding commitment within the contract — for example, a covenant to keep insurance, or a covenant not to compete.",
+    "aliases": ["covenants", "covenant not to"],
+    "category": "contracts",
+    "risk": "low"
+  },
+  "consideration": {
+    "simple": "what each side gives to make the deal real",
+    "detailed": "The thing of value each party exchanges — money, services, a promise. A contract generally isn't binding without it.",
+    "category": "contracts",
+    "risk": "low"
+  },
+  "perpetual license": {
+    "simple": "permission that lasts forever",
+    "detailed": "A right to use something that doesn't expire. Paired with 'irrevocable,' it also can't be taken back.",
+    "why": "Granting a perpetual, irrevocable license to your content means you can't later change your mind.",
+    "aliases": ["perpetual", "irrevocable license", "irrevocable", "perpetual and irrevocable"],
+    "category": "ip",
+    "risk": "high"
+  },
+  "intellectual property": {
+    "simple": "ownership of creations like writing, code, or art",
+    "detailed": "Legal rights over things people create — text, designs, software, inventions, brand names. Contracts often say who owns the IP that's made.",
+    "aliases": ["ip rights", "intellectual property rights", "ownership of work"],
+    "category": "ip",
+    "risk": "medium",
+    "replaceable": false
+  },
+  "joint and several liability": {
+    "simple": "any one person can be made to pay the whole amount",
+    "detailed": "When several people share a debt, this lets the other side collect the entire amount from just one of them — who then has to chase the others for their shares.",
+    "why": "You could be forced to cover everyone's portion, not just your own.",
+    "aliases": ["jointly and severally", "joint and several"],
+    "category": "liability",
+    "risk": "high"
+  },
+  "statute of limitations": {
+    "simple": "the deadline to bring a legal claim",
+    "detailed": "The time limit for suing over a problem. After it passes, you usually lose the right to bring the claim at all.",
+    "aliases": ["limitation period", "time-barred"],
+    "category": "disputes",
+    "risk": "medium"
+  },
+  "notice period": {
+    "simple": "how much warning you must give before acting",
+    "detailed": "The amount of advance notice required before doing something like cancelling or ending the agreement — e.g. '30 days' written notice.'",
+    "next": "Note the exact length and how notice must be delivered (email, letter, portal).",
+    "aliases": ["notice", "written notice", "prior notice"],
+    "category": "termination",
+    "risk": "medium"
+  },
+  "cure period": {
+    "simple": "time given to fix a problem before penalties",
+    "detailed": "A grace window to correct a breach after being notified, before the other side can end the contract or take action.",
+    "aliases": ["right to cure", "cure", "opportunity to cure"],
+    "category": "termination",
+    "risk": "low"
+  },
+  "net 30": {
+    "simple": "payment is due within 30 days",
+    "detailed": "An invoicing term meaning the full amount must be paid within 30 days of the invoice date. 'Net 60' and 'Net 15' work the same way with different deadlines.",
+    "aliases": ["net 60", "net 15", "net thirty", "payment terms"],
+    "category": "payment",
+    "risk": "low"
+  },
+  "late fee": {
+    "simple": "an extra charge for paying after the deadline",
+    "detailed": "A penalty added when payment is late — sometimes a flat amount, sometimes a percentage that grows over time.",
+    "aliases": ["late fees", "late payment fee", "default interest"],
+    "category": "payment",
+    "risk": "medium"
+  },
+  "entire agreement": {
+    "simple": "only what's written here counts",
+    "detailed": "A clause (also called an 'integration clause') saying the written contract is the complete deal — earlier emails, promises, or verbal agreements don't count.",
+    "why": "If a salesperson promised something that isn't in the document, this clause can make that promise unenforceable.",
+    "aliases": ["integration clause", "merger clause", "entire agreement clause"],
+    "category": "contracts",
+    "risk": "medium"
+  },
+  "data processing agreement": {
+    "simple": "rules for how your data gets handled",
+    "detailed": "A contract (DPA) setting out how a company may collect, use, store, and protect personal data on your behalf — often required by privacy laws like GDPR.",
+    "aliases": ["dpa", "data processing addendum", "subprocessor", "subprocessors"],
+    "category": "privacy",
+    "risk": "medium",
+    "replaceable": false
+  },
+  "acceptable use": {
+    "simple": "the rules for how you're allowed to use a service",
+    "detailed": "A policy listing what you may and may not do with a product or service. Breaking it can get your account suspended.",
+    "aliases": ["acceptable use policy", "aup", "terms of use", "acceptable usage"],
+    "category": "terms-of-service",
+    "risk": "low"
+  },
+  "personal guarantee": {
+    "simple": "you promise to pay with your own money if the business can't",
+    "detailed": "A pledge that makes you personally responsible for a debt or obligation — so if a company can't pay, the other side can come after your personal assets.",
+    "why": "This pierces the protection of a business entity and can put your home or savings at risk.",
+    "aliases": ["personal guaranty", "personally guarantee", "guarantor"],
+    "category": "liability",
+    "risk": "high"
+  }
+}

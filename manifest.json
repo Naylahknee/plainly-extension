@@ -96,7 +96,7 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["glossary.json", "prompts/*.txt"],
+      "resources": ["glossary.json", "glossary/*.json", "prompts/*.txt"],
       "matches": ["<all_urls>"]
     }
   ]

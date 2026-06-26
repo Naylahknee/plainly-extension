@@ -28,23 +28,89 @@
     /** One big regex matching every known term/alias, longest first. */
     termPattern: null,
 
-    /** True once load() has completed. */
+    /** True once any domain has loaded (gates findTerms/annotate/rewrite). */
     ready: false,
 
+    /** Which domain's terms are currently loaded (null until first load). */
+    loadedDomain: null,
+
+    /** The parsed packs.json manifest entries; populated by loadPacks(). */
+    packs: null,
+
+    /** Default domain id from the manifest. */
+    defaultDomain: "tech",
+
     /**
-     * Load glossary.json bundled with the extension and build the indexes.
-     * Safe to call multiple times — it only loads once.
+     * Load the pack manifest (glossary/packs.json) once. Describes every
+     * available domain: id, label, tagline, file, riskWords, sitePatterns.
+     * Falls back to a built-in tech-only manifest if the file is missing
+     * (e.g. an older build without the glossary/ directory).
      */
-    async load() {
-      if (this.ready) return;
+    async loadPacks() {
+      if (this.packs) return this.packs;
+      try {
+        const manifest = await fetchJson("glossary/packs.json");
+        this.packs = manifest.packs || [];
+        this.defaultDomain = manifest.default || "tech";
+        // Optional shared pack, fetched only when the manifest declares it
+        // (avoids a 404 probe on every domain load).
+        this.commonFile = manifest.common || null;
+      } catch {
+        // Back-compat: no manifest → single tech pack pointing at the
+        // legacy flat glossary.json.
+        this.packs = [
+          { id: "tech", label: "Tech", tagline: "Tech, in plain English", file: "glossary.json" },
+        ];
+        this.defaultDomain = "tech";
+        this.commonFile = null;
+      }
+      return this.packs;
+    },
 
-      const url = chrome.runtime.getURL("glossary.json");
-      const response = await fetch(url);
-      const data = await response.json();
+    /** Look up one pack by id. Returns undefined if unknown. */
+    getPack(id) {
+      return (this.packs || []).find((p) => p.id === id);
+    },
 
+    /** All available packs (for domain pickers). Loads the manifest first. */
+    async listPacks() {
+      await this.loadPacks();
+      return this.packs;
+    },
+
+    /**
+     * Load a domain's glossary and build the lookup indexes.
+     * Re-calling with the same domain is a no-op; switching domains rebuilds.
+     * @param {string} domain - pack id, e.g. "tech" or "legal"
+     */
+    async load(domain) {
+      await this.loadPacks();
+      const target = domain || this.defaultDomain;
+      if (this.loadedDomain === target) return;
+
+      const pack = this.getPack(target);
+      const file =
+        (pack && pack.file) ||
+        (target === "tech" ? "glossary.json" : `glossary/${target}.json`);
+
+      const data = await fetchJson(file);
       // The "_meta" key documents the format; it isn't a real term.
       delete data._meta;
-      this.entries = data;
+
+      // Optional shared "common" pack merged under every domain (the
+      // domain's own entries win on any key collision). Only fetched when
+      // the manifest declares `common`, so there's no 404 probe otherwise.
+      let entries = data;
+      if (this.commonFile) {
+        try {
+          const common = await fetchJson(this.commonFile);
+          delete common._meta;
+          entries = { ...common, ...data };
+        } catch {
+          /* declared but unreadable — proceed with the domain alone */
+        }
+      }
+      this.entries = entries;
 
       // Build alias index: every term and every alias points back to
       // the canonical entry, so "repo", "repos", and "repository" all
@@ -52,7 +118,7 @@
       this.aliasIndex.clear();
       const allPhrases = [];
 
-      for (const [term, entry] of Object.entries(data)) {
+      for (const [term, entry] of Object.entries(this.entries)) {
         this.aliasIndex.set(term.toLowerCase(), term);
         allPhrases.push(term);
         for (const alias of entry.aliases || []) {
@@ -75,6 +141,7 @@
       // and \b prevents partial-word matches.
       this.termPattern = new RegExp(`\\b(${escaped.join("|")})\\b`, "gi");
       this.ready = true;
+      this.loadedDomain = target;
     },
 
     /**
@@ -237,6 +304,18 @@
     if (sep(text[start - 1]) && word(text[start - 2])) return true;
     if (sep(text[end]) && word(text[end + 1])) return true;
     return false;
+  }
+
+  /**
+   * Fetch + parse a JSON file bundled with the extension / PWA.
+   * Throws on a missing file (network error OR non-200) so callers can
+   * use try/catch to treat "file absent" uniformly across both the
+   * chrome-extension:// and http(s):// environments.
+   */
+  async function fetchJson(path) {
+    const response = await fetch(chrome.runtime.getURL(path));
+    if (!response.ok) throw new Error(`${path}: ${response.status}`);
+    return response.json();
   }
 
   /** Capitalize the first letter of a phrase. */
