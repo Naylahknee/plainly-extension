@@ -28,6 +28,12 @@
   const alwaysTranslate = $("toggle-always-translate");
   const btnRestore = $("btn-restore-language");
 
+  const LANGUAGE_CODES = {
+    English: "en", Spanish: "es", French: "fr", German: "de",
+    Portuguese: "pt", Italian: "it", Japanese: "ja", Korean: "ko",
+    "Chinese (Simplified)": "zh"
+  };
+
   const setStatus = (text) => { statusLine.textContent = text; };
 
   async function activeTab() {
@@ -38,8 +44,79 @@
   async function messageContent(message) {
     const tab = await activeTab();
     if (!tab?.id) return null;
-    try { return await chrome.tabs.sendMessage(tab.id, message); }
-    catch { return null; }
+    try {
+      return await chrome.tabs.sendMessage(tab.id, message);
+    } catch (error) {
+      console.error("Plainly page message failed:", error);
+      return null;
+    }
+  }
+
+  async function detectLanguage(text, pageLanguage) {
+    const pageCode = String(pageLanguage || "").split("-")[0].toLowerCase();
+    if (pageCode && pageCode !== "en") return pageCode;
+
+    if ("LanguageDetector" in self) {
+      const availability = await LanguageDetector.availability();
+      if (availability !== "unavailable") {
+        const detector = await LanguageDetector.create();
+        try {
+          const results = await detector.detect(text.slice(0, 3000));
+          if (results?.[0]?.detectedLanguage) return results[0].detectedLanguage;
+        } finally {
+          detector.destroy?.();
+        }
+      }
+    }
+
+    if (/[áéíóúüñ¿¡]/i.test(text)) return "es";
+    if (/[àâçéèêëîïôûùüÿœ]/i.test(text)) return "fr";
+    if (/[äöüß]/i.test(text)) return "de";
+    return "es";
+  }
+
+  async function translateItemsWithChrome(items, sourceLanguage, targetLanguageCode) {
+    if (!("Translator" in self)) {
+      throw new Error("Chrome's Translator API is not available in this browser profile.");
+    }
+
+    const availability = await Translator.availability({
+      sourceLanguage,
+      targetLanguage: targetLanguageCode
+    });
+
+    if (availability === "unavailable") {
+      throw new Error(`Chrome cannot translate ${sourceLanguage} to ${targetLanguageCode} on this device.`);
+    }
+
+    let lastProgress = 0;
+    const session = await Translator.create({
+      sourceLanguage,
+      targetLanguage: targetLanguageCode,
+      monitor(monitor) {
+        monitor.addEventListener("downloadprogress", (event) => {
+          const percent = Math.round((event.loaded || 0) * 100);
+          if (percent >= lastProgress + 10) {
+            lastProgress = percent;
+            setStatus(`Downloading translation model… ${percent}%`);
+          }
+        });
+      }
+    });
+
+    try {
+      const translations = [];
+      for (let i = 0; i < items.length; i++) {
+        const translated = await session.translate(items[i].text);
+        translations.push({ id: items[i].id, text: translated });
+        if ((i + 1) % 10 === 0 || i === items.length - 1) {
+          setStatus(`Translating… ${i + 1} of ${items.length} text blocks`);
+        }
+      }
+      return translations;
+    } finally {
+      session.destroy?.();
+    }
   }
 
   async function init() {
@@ -47,8 +124,8 @@
     toggleEnabled.checked = settings.enabled;
     modeSelect.value = settings.mode;
     toggleReplace.checked = settings.replaceMode;
-    if (targetLanguage) targetLanguage.value = settings.targetLanguage || "English";
-    if (alwaysTranslate) alwaysTranslate.checked = settings.alwaysTranslateCurrentSite;
+    targetLanguage.value = settings.targetLanguage || "English";
+    alwaysTranslate.checked = Boolean(settings.alwaysTranslateCurrentSite);
     setStatus(settings.enabled ? "Plainly is ready." : "Plainly is paused.");
 
     const packs = await glossaryService.listPacks();
@@ -88,38 +165,55 @@
 
   btnTranslate.addEventListener("click", async () => {
     btnTranslate.disabled = true;
-    setStatus("Translating visible page content… The first use may download Chrome's language model.");
-    const language = targetLanguage?.value || "English";
-    await storageService.updateSettings({
-      enabled: true,
-      languageTranslationEnabled: true,
-      targetLanguage: language,
-      alwaysTranslateCurrentSite: Boolean(alwaysTranslate?.checked)
-    });
-    const reply = await messageContent({
-      type: "PLAINLY_LANGUAGE_TRANSLATE_PAGE",
-      targetLanguage: language
-    });
-    btnTranslate.disabled = false;
-    if (reply?.ok) {
-      setStatus(reply.translated
-        ? `Done — translated ${reply.translated} visible text block${reply.translated === 1 ? "" : "s"}.`
-        : "No foreign-language text was found, or the page is already in the selected language.");
-    } else {
-      setStatus(reply?.error || "Plainly is not active on this page. Reload the webpage after reloading the extension.");
+    try {
+      setStatus("Reading visible page text…");
+      const page = await messageContent({ type: "PLAINLY_GET_TRANSLATABLE_TEXT" });
+      if (!page?.ok) throw new Error("Plainly cannot access this page. Reload the Skool tab and try again.");
+      if (!page.items?.length) throw new Error("No visible text blocks were found on this page.");
+
+      const languageName = targetLanguage.value || "English";
+      const targetCode = LANGUAGE_CODES[languageName] || "en";
+      const sample = page.items.map((item) => item.text).join(" ");
+      const sourceCode = await detectLanguage(sample, page.pageLanguage);
+
+      if (sourceCode === targetCode) {
+        throw new Error(`The page already appears to be in ${languageName}.`);
+      }
+
+      setStatus(`Detected ${sourceCode}. Preparing ${languageName} translation…`);
+      const translations = await translateItemsWithChrome(page.items, sourceCode, targetCode);
+      const result = await messageContent({
+        type: "PLAINLY_APPLY_TRANSLATIONS",
+        translations
+      });
+      if (!result?.ok) throw new Error("Translation finished, but Plainly could not place it back on the page.");
+
+      await storageService.updateSettings({
+        enabled: true,
+        languageTranslationEnabled: true,
+        targetLanguage: languageName,
+        alwaysTranslateCurrentSite: Boolean(alwaysTranslate.checked)
+      });
+      toggleEnabled.checked = true;
+      setStatus(`Done — translated ${result.applied} visible text block${result.applied === 1 ? "" : "s"}.`);
+    } catch (error) {
+      console.error("Plainly translation error:", error);
+      setStatus(`Translation failed: ${error.message}`);
+    } finally {
+      btnTranslate.disabled = false;
     }
   });
 
-  btnRestore?.addEventListener("click", async () => {
+  btnRestore.addEventListener("click", async () => {
     const reply = await messageContent({ type: "PLAINLY_LANGUAGE_RESTORE_PAGE" });
     setStatus(reply?.ok ? `Restored ${reply.restored} text block${reply.restored === 1 ? "" : "s"}.` : "Could not restore this page.");
   });
 
-  targetLanguage?.addEventListener("change", async () => {
+  targetLanguage.addEventListener("change", async () => {
     await storageService.updateSettings({ targetLanguage: targetLanguage.value });
   });
 
-  alwaysTranslate?.addEventListener("change", async () => {
+  alwaysTranslate.addEventListener("change", async () => {
     await storageService.updateSettings({ alwaysTranslateCurrentSite: alwaysTranslate.checked });
   });
 
@@ -145,16 +239,23 @@
     glossaryList.replaceChildren(...entries.map(([term, entry]) => {
       const li = document.createElement("li");
       li.className = "glossary-item";
-      li.innerHTML = `<span class="glossary-term"></span><span class="glossary-meaning"></span>`;
-      li.children[0].textContent = term;
-      li.children[1].textContent = entry.simple;
+      const title = document.createElement("span");
+      title.className = "glossary-term";
+      title.textContent = term;
+      const meaning = document.createElement("span");
+      meaning.className = "glossary-meaning";
+      meaning.textContent = entry.simple;
+      li.append(title, meaning);
       return li;
     }));
   }
 
   btnSidePanel.addEventListener("click", async () => {
     const tab = await activeTab();
-    if (tab?.id) { await chrome.sidePanel.open({ tabId: tab.id }); window.close(); }
+    if (tab?.id) {
+      await chrome.sidePanel.open({ tabId: tab.id });
+      window.close();
+    }
   });
 
   domainSelect.addEventListener("change", async () => {
@@ -191,10 +292,12 @@
       await storageService.setAiKey(providerId, key);
       await storageService.updateSettings({ aiProvider: providerId, aiModel: aiModelInput.value.trim() });
       await translator.testProvider();
-      aiStatus.textContent = `Connected. ${provider.label} can be used when Chrome translation is unavailable.`;
+      aiStatus.textContent = `Connected. ${provider.label} can now explain content.`;
     } catch (error) {
       aiStatus.textContent = `Couldn't connect: ${error.message}`;
-    } finally { btnAiSave.disabled = false; }
+    } finally {
+      btnAiSave.disabled = false;
+    }
   });
 
   init();
