@@ -6,21 +6,15 @@
   <title>Plainly</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-
-<!-- The body class scopes popup styles inside the shared stylesheet -->
 <body class="plainly-popup">
-
-  <!-- ============ HEADER: identity + master switch ============ -->
   <header class="popup-header">
     <div class="popup-brand">
       <span class="popup-logo" aria-hidden="true"></span>
       <div>
         <h1 class="popup-title">Plainly</h1>
-        <p class="popup-subtitle">Tech, in plain English</p>
+        <p class="popup-subtitle">Understand anything online</p>
       </div>
     </div>
-
-    <!-- Master ON/OFF toggle -->
     <label class="switch" for="toggle-enabled">
       <span class="visually-hidden">Plainly on or off</span>
       <input type="checkbox" id="toggle-enabled" role="switch" />
@@ -28,16 +22,50 @@
     </label>
   </header>
 
-  <!-- Status line gives quiet feedback after actions -->
-  <p id="status-line" class="popup-status" role="status">Plainly is on for this site.</p>
+  <p id="status-line" class="popup-status" role="status">Plainly is ready.</p>
 
-  <!-- ============ PRIMARY ACTIONS ============ -->
+  <section class="popup-section">
+    <div class="setting-row">
+      <label for="target-language" class="setting-label">
+        Translate page into
+        <span class="setting-hint">Plainly detects the source language automatically</span>
+      </label>
+      <select id="target-language" class="setting-select">
+        <option value="English">English</option>
+        <option value="Spanish">Spanish</option>
+        <option value="French">French</option>
+        <option value="German">German</option>
+        <option value="Portuguese">Portuguese</option>
+        <option value="Italian">Italian</option>
+        <option value="Japanese">Japanese</option>
+        <option value="Korean">Korean</option>
+        <option value="Chinese (Simplified)">Chinese (Simplified)</option>
+      </select>
+    </div>
+
+    <div class="setting-row setting-row-inline">
+      <label for="toggle-always-translate" class="setting-label">
+        Keep translating new content
+        <span class="setting-hint">Useful for Skool posts, lessons, and comments loaded while scrolling</span>
+      </label>
+      <input type="checkbox" id="toggle-always-translate" />
+    </div>
+  </section>
+
   <nav class="popup-actions" aria-label="Plainly actions">
     <button id="btn-translate-page" class="action-btn">
-      <span class="action-icon" aria-hidden="true">¶</span>
+      <span class="action-icon" aria-hidden="true">文</span>
       <span class="action-text">
         <span class="action-label">Translate this page</span>
-        <span class="action-hint">Underline jargon with plain-English tooltips</span>
+        <span class="action-hint">Translate visible webpage text and preserve the layout</span>
+      </span>
+    </button>
+
+    <button id="btn-restore-language" class="action-btn">
+      <span class="action-icon" aria-hidden="true">↶</span>
+      <span class="action-text">
+        <span class="action-label">Show original language</span>
+        <span class="action-hint">Restore translated page text</span>
       </span>
     </button>
 
@@ -53,7 +81,7 @@
       <span class="action-icon" aria-hidden="true">≡</span>
       <span class="action-text">
         <span class="action-label">Show glossary</span>
-        <span class="action-hint">Every term Plainly knows</span>
+        <span class="action-hint">Plain-English technical definitions</span>
       </span>
     </button>
 
@@ -61,32 +89,24 @@
       <span class="action-icon" aria-hidden="true">▤</span>
       <span class="action-text">
         <span class="action-label">Open side panel</span>
-        <span class="action-hint">Page summary, next steps &amp; risk level</span>
+        <span class="action-hint">Page summary, next steps, and explanation</span>
       </span>
     </button>
   </nav>
 
-  <!-- ============ GLOSSARY (collapsible, filled by popup.js) ============ -->
   <section id="glossary-section" class="popup-section" hidden>
     <h2 class="section-heading">Glossary</h2>
-    <input
-      type="search"
-      id="glossary-search"
-      class="glossary-search"
-      placeholder="Search a term…"
-      aria-label="Search glossary terms"
-    />
+    <input type="search" id="glossary-search" class="glossary-search" placeholder="Search a term…" aria-label="Search glossary terms" />
     <ul id="glossary-list" class="glossary-list"></ul>
   </section>
 
-  <!-- ============ SETTINGS (collapsible) ============ -->
   <details class="popup-settings">
     <summary class="section-heading">Settings</summary>
 
     <div class="setting-row">
       <label for="domain-select" class="setting-label">
         Knowledge domain
-        <span class="setting-hint">Which field's jargon to translate</span>
+        <span class="setting-hint">Used when simplifying jargon</span>
       </label>
       <select id="domain-select" class="setting-select"></select>
     </div>
@@ -95,7 +115,7 @@
       <label for="mode-select" class="setting-label">Explanation style</label>
       <select id="mode-select" class="setting-select">
         <option value="beginner">Beginner — plainest possible</option>
-        <option value="business">Business owner — outcomes &amp; impact</option>
+        <option value="business">Business owner — outcomes and impact</option>
         <option value="creator">Creator — publishing focus</option>
         <option value="adhd">ADHD — short, clear chunks</option>
         <option value="devlite">Developer lite — keep some terms</option>
@@ -105,35 +125,28 @@
     <div class="setting-row setting-row-inline">
       <label for="toggle-replace" class="setting-label">
         Replace jargon inline
-        <span class="setting-hint">Rewrites terms in place instead of underlining</span>
+        <span class="setting-hint">Rewrites technical terms in place</span>
       </label>
       <input type="checkbox" id="toggle-replace" />
     </div>
 
-    <!-- ============ AI ASSISTANCE (optional) ============ -->
     <div class="setting-row">
       <label for="ai-provider" class="setting-label">
-        AI assistance (optional)
-        <span class="setting-hint">For deeper explanations beyond the built-in glossary</span>
+        Translation and AI provider
+        <span class="setting-hint">Required for full-page language translation</span>
       </label>
       <select id="ai-provider" class="setting-select">
-        <option value="none">Off — glossary only (default)</option>
+        <option value="none">Not connected</option>
         <option value="claude">Claude (Anthropic)</option>
         <option value="openai">OpenAI</option>
         <option value="gemini">Gemini (Google)</option>
-        <option value="local">Local model (Ollama) — most private</option>
+        <option value="local">Local model (Ollama)</option>
       </select>
     </div>
 
     <div class="setting-row" id="ai-key-row" hidden>
       <label for="ai-key" class="setting-label">API key</label>
-      <input
-        type="password"
-        id="ai-key"
-        class="glossary-search"
-        placeholder="Paste your API key"
-        autocomplete="off"
-      />
+      <input type="password" id="ai-key" class="glossary-search" placeholder="Paste your API key" autocomplete="off" />
     </div>
 
     <div class="setting-row" id="ai-model-row" hidden>
@@ -141,29 +154,17 @@
         Model
         <span class="setting-hint" id="ai-model-hint"></span>
       </label>
-      <input
-        type="text"
-        id="ai-model"
-        class="glossary-search"
-        placeholder=""
-        autocomplete="off"
-      />
+      <input type="text" id="ai-model" class="glossary-search" autocomplete="off" />
     </div>
 
     <div class="setting-row" id="ai-save-row" hidden>
-      <button id="btn-ai-save" class="copy-btn copy-btn-wide">Save &amp; test connection</button>
+      <button id="btn-ai-save" class="copy-btn copy-btn-wide">Save and test connection</button>
       <p id="ai-status" class="popup-status" role="status"></p>
-      <p class="setting-hint">
-        Your key is stored only on this device and sent only to the provider
-        you chose, only when you ask for a deeper explanation.
-      </p>
+      <p class="setting-hint">The key is stored on this device. Webpage text is sent to the selected provider only when translation or AI assistance is used.</p>
     </div>
 
-    <!-- Required privacy statement -->
     <p class="privacy-note">
-      <strong>Your privacy:</strong> We only translate text you interact with.
-      We do not sell browsing data. Translation happens locally in your
-      browser using Plainly's built-in glossary.
+      <strong>Your privacy:</strong> Plainly skips forms, passwords, editable fields, and code blocks. Full-page language translation sends eligible visible text to the provider you connect.
     </p>
   </details>
 
