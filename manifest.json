@@ -2,16 +2,14 @@
   "manifest_version": 3,
   "name": "Plainly — Understand Anything Online",
   "short_name": "Plainly",
-  "version": "0.3.0",
-  "minimum_chrome_version": "116",
+  "version": "0.4.0",
+  "minimum_chrome_version": "138",
   "description": "Translate languages and turn complex online content into plain English while you browse.",
-
   "icons": {
     "16": "assets/icon16.png",
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
   },
-
   "action": {
     "default_popup": "popup.html",
     "default_title": "Plainly — translate or simplify this page",
@@ -21,22 +19,18 @@
       "128": "assets/icon128.png"
     }
   },
-
   "background": {
     "service_worker": "background.js"
   },
-
   "side_panel": {
     "default_path": "sidepanel.html"
   },
-
   "permissions": [
     "storage",
     "activeTab",
     "contextMenus",
     "sidePanel"
   ],
-
   "optional_host_permissions": [
     "https://api.anthropic.com/*",
     "https://api.openai.com/*",
@@ -46,7 +40,6 @@
     "https://*/*",
     "http://*/*"
   ],
-
   "host_permissions": [
     "https://github.com/*",
     "https://*.github.com/*",
@@ -69,7 +62,6 @@
     "https://www.skool.com/*",
     "https://skool.com/*"
   ],
-
   "content_scripts": [
     {
       "matches": [
@@ -99,14 +91,13 @@
         "services/glossaryService.js",
         "services/tooltipService.js",
         "services/translator.js",
-        "services/languagePageTranslator.js",
+        "services/pageTextBridge.js",
         "content.js"
       ],
       "css": ["styles.css"],
       "run_at": "document_idle"
     }
   ],
-
   "web_accessible_resources": [
     {
       "resources": ["glossary.json", "glossary/*.json", "prompts/*.txt"],
