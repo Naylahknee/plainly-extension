@@ -87,13 +87,8 @@
   });
 
   btnTranslate.addEventListener("click", async () => {
-    const settings = await storageService.getSettings();
-    if (!settings.aiProvider || settings.aiProvider === "none") {
-      setStatus("Connect Gemini, OpenAI, or Claude in Settings before translating languages.");
-      return;
-    }
     btnTranslate.disabled = true;
-    setStatus("Translating visible page content…");
+    setStatus("Translating visible page content… The first use may download Chrome's language model.");
     const language = targetLanguage?.value || "English";
     await storageService.updateSettings({
       enabled: true,
@@ -109,9 +104,9 @@
     if (reply?.ok) {
       setStatus(reply.translated
         ? `Done — translated ${reply.translated} visible text block${reply.translated === 1 ? "" : "s"}.`
-        : "Nothing new needed translation on this page.");
+        : "No foreign-language text was found, or the page is already in the selected language.");
     } else {
-      setStatus(reply?.error || "Plainly is not active on this page. Reload the page after updating the extension.");
+      setStatus(reply?.error || "Plainly is not active on this page. Reload the webpage after reloading the extension.");
     }
   });
 
@@ -196,7 +191,7 @@
       await storageService.setAiKey(providerId, key);
       await storageService.updateSettings({ aiProvider: providerId, aiModel: aiModelInput.value.trim() });
       await translator.testProvider();
-      aiStatus.textContent = `Connected. ${provider.label} can now translate and explain content.`;
+      aiStatus.textContent = `Connected. ${provider.label} can be used when Chrome translation is unavailable.`;
     } catch (error) {
       aiStatus.textContent = `Couldn't connect: ${error.message}`;
     } finally { btnAiSave.disabled = false; }
