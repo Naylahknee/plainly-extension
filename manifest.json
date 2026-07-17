@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Plainly — Plain English for Technical Websites",
+  "name": "Plainly — Understand Anything Online",
   "short_name": "Plainly",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "minimum_chrome_version": "116",
-  "description": "Translates technical jargon into plain English while you browse. Like Google Translate, but for tech jargon.",
+  "description": "Translate languages and turn complex online content into plain English while you browse.",
 
   "icons": {
     "16": "assets/icon16.png",
@@ -14,7 +14,7 @@
 
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Plainly — translate this page into plain English",
+    "default_title": "Plainly — translate or simplify this page",
     "default_icon": {
       "16": "assets/icon16.png",
       "48": "assets/icon48.png",
@@ -42,7 +42,9 @@
     "https://api.openai.com/*",
     "https://generativelanguage.googleapis.com/*",
     "http://localhost/*",
-    "http://127.0.0.1/*"
+    "http://127.0.0.1/*",
+    "https://*/*",
+    "http://*/*"
   ],
 
   "host_permissions": [
@@ -63,7 +65,9 @@
     "https://developers.notion.com/*",
     "https://*.docusign.com/*",
     "https://*.hellosign.com/*",
-    "https://app.ironcladapp.com/*"
+    "https://app.ironcladapp.com/*",
+    "https://www.skool.com/*",
+    "https://skool.com/*"
   ],
 
   "content_scripts": [
@@ -86,13 +90,16 @@
         "https://developers.notion.com/*",
         "https://*.docusign.com/*",
         "https://*.hellosign.com/*",
-        "https://app.ironcladapp.com/*"
+        "https://app.ironcladapp.com/*",
+        "https://www.skool.com/*",
+        "https://skool.com/*"
       ],
       "js": [
         "services/storageService.js",
         "services/glossaryService.js",
         "services/tooltipService.js",
         "services/translator.js",
+        "services/languagePageTranslator.js",
         "content.js"
       ],
       "css": ["styles.css"],
