@@ -1,7 +1,7 @@
 /**
  * Plainly — languagePageTranslator.js
- * Translates visible webpage text with the user's configured AI provider.
- * This MVP is optimized for dynamic course/community sites such as Skool.
+ * Translates visible webpage text. Chrome's built-in Translator API is used
+ * first when available; the configured AI provider is a fallback.
  */
 (function () {
   const Plainly = (globalThis.Plainly = globalThis.Plainly || {});
@@ -16,13 +16,20 @@
     "#plainly-tooltip", `[${MARKER}='true']`
   ].join(",");
 
+  const LANGUAGE_CODES = {
+    English: "en", Spanish: "es", French: "fr", German: "de",
+    Portuguese: "pt", Italian: "it", Japanese: "ja", Korean: "ko",
+    "Chinese (Simplified)": "zh"
+  };
+
   let observer = null;
   let timer = null;
   let translating = false;
-  const cache = new Map();
 
   function isVisible(element) {
-    return element && (element.offsetParent !== null || element.tagName === "BODY");
+    if (!element) return false;
+    const style = getComputedStyle(element);
+    return element.offsetParent !== null && style.visibility !== "hidden" && style.display !== "none";
   }
 
   function collectTextNodes(root = document.body) {
@@ -39,16 +46,68 @@
     });
     const nodes = [];
     while (walker.nextNode()) nodes.push(walker.currentNode);
-    return nodes.slice(0, 250);
+    return nodes.slice(0, 400);
   }
 
-  function makeBatches(nodes, maxChars = 6500, maxItems = 35) {
+  function languageHint(text) {
+    const htmlLang = document.documentElement.lang?.split("-")[0]?.toLowerCase();
+    if (htmlLang && htmlLang !== "en") return htmlLang;
+    if (/[áéíóúüñ¿¡]/i.test(text)) return "es";
+    if (/[àâçéèêëîïôûùüÿœ]/i.test(text)) return "fr";
+    if (/[äöüß]/i.test(text)) return "de";
+    if (/[ぁ-んァ-ン一-龯]/u.test(text)) return "ja";
+    if (/[가-힣]/u.test(text)) return "ko";
+    if (/[一-龯]/u.test(text)) return "zh";
+    return null;
+  }
+
+  async function detectSourceLanguage(text) {
+    if ("LanguageDetector" in self) {
+      try {
+        const availability = await LanguageDetector.availability();
+        if (availability !== "unavailable") {
+          const detector = await LanguageDetector.create();
+          const results = await detector.detect(text.slice(0, 1200));
+          detector.destroy?.();
+          if (results?.[0]?.detectedLanguage) return results[0].detectedLanguage;
+        }
+      } catch (error) {
+        console.debug("Plainly language detection fallback:", error);
+      }
+    }
+    return languageHint(text) || "es";
+  }
+
+  async function createChromeTranslator(sourceLanguage, targetLanguage) {
+    if (!("Translator" in self)) return null;
+    const availability = await Translator.availability({ sourceLanguage, targetLanguage });
+    if (availability === "unavailable") return null;
+    return Translator.create({ sourceLanguage, targetLanguage });
+  }
+
+  async function translateWithChrome(items, targetCode) {
+    const sample = items.map((item) => item.text).join(" ").slice(0, 2000);
+    const sourceCode = await detectSourceLanguage(sample);
+    if (!sourceCode || sourceCode === targetCode) return items.map((item) => item.text);
+
+    const chromeTranslator = await createChromeTranslator(sourceCode, targetCode);
+    if (!chromeTranslator) return null;
+
+    try {
+      const results = [];
+      for (const item of items) results.push(await chromeTranslator.translate(item.text));
+      return results;
+    } finally {
+      chromeTranslator.destroy?.();
+    }
+  }
+
+  function makeBatches(nodes, maxChars = 5000, maxItems = 30) {
     const batches = [];
     let batch = [];
     let chars = 0;
     for (const node of nodes) {
       const text = node.nodeValue.trim();
-      if (cache.has(text)) continue;
       if (batch.length && (chars + text.length > maxChars || batch.length >= maxItems)) {
         batches.push(batch);
         batch = [];
@@ -70,44 +129,60 @@
     return list.map((item) => typeof item === "string" ? item : item?.translation || "");
   }
 
-  async function translateBatch(batch, targetLanguage) {
+  async function translateWithAI(batch, targetLanguage) {
+    const config = await translator.getAIConfig();
+    if (!config.configured) return null;
     const numbered = batch.map((item, i) => `${i + 1}. ${JSON.stringify(item.text)}`).join("\n");
-    const prompt = `You are Plainly, a precise webpage translator. Detect the source language of each item and translate it into ${targetLanguage}. Preserve names, meaning, tone, emojis, punctuation, and formatting. Do not explain or summarize. Return ONLY valid JSON in this exact shape: {"translations":["translation 1","translation 2"]}. Keep the same item count and order.\n\nITEMS:\n${numbered}`;
+    const prompt = `Translate each item into ${targetLanguage}. Detect each source language. Preserve meaning, names, tone, punctuation, emojis, and formatting. Return ONLY valid JSON: {"translations":["translation 1","translation 2"]}. Keep exactly the same item count and order.\n\nITEMS:\n${numbered}`;
     const raw = await translator.runAI(prompt);
-    const translations = parseTranslations(raw, batch.length);
-    if (!translations) throw new Error("The provider returned an invalid translation format.");
-    return translations;
+    return parseTranslations(raw, batch.length);
+  }
+
+  function applyResults(batch, results) {
+    let translated = 0;
+    results.forEach((translatedText, index) => {
+      const { node, text } = batch[index];
+      if (!translatedText || translatedText === text || !node.isConnected || node.nodeValue.trim() !== text) return;
+      const parent = node.parentElement;
+      if (!parent) return;
+      parent.setAttribute(ORIGINAL, node.nodeValue);
+      parent.setAttribute(MARKER, "true");
+      parent.title = `Original: ${text}`;
+      node.nodeValue = node.nodeValue.replace(text, translatedText);
+      translated++;
+    });
+    return translated;
   }
 
   async function translatePage({ targetLanguage = "English" } = {}) {
     if (translating) return { ok: false, error: "Translation is already running." };
-    const config = await translator.getAIConfig();
-    if (!config.configured) {
-      return { ok: false, error: "Choose and connect an AI provider in Plainly settings first." };
-    }
-
     translating = true;
     let translated = 0;
     try {
       const nodes = collectTextNodes();
+      if (!nodes.length) return { ok: true, translated: 0 };
       const batches = makeBatches(nodes);
+      const targetCode = LANGUAGE_CODES[targetLanguage] || "en";
+
       for (const batch of batches) {
-        const results = await translateBatch(batch, targetLanguage);
-        results.forEach((translatedText, index) => {
-          const { node, text } = batch[index];
-          if (!translatedText || !node.isConnected || node.nodeValue.trim() !== text) return;
-          const parent = node.parentElement;
-          if (!parent) return;
-          parent.setAttribute(ORIGINAL, text);
-          parent.setAttribute(MARKER, "true");
-          parent.title = `Original: ${text}`;
-          node.nodeValue = node.nodeValue.replace(text, translatedText);
-          cache.set(text, translatedText);
-          translated++;
-        });
+        let results = null;
+        try {
+          results = await translateWithChrome(batch, targetCode);
+        } catch (error) {
+          console.debug("Plainly Chrome Translator fallback:", error);
+        }
+        if (!results) results = await translateWithAI(batch, targetLanguage);
+        if (!results) {
+          return {
+            ok: false,
+            error: "Chrome translation is unavailable on this device. Connect Gemini, OpenAI, or Claude in Settings as a fallback."
+          };
+        }
+        translated += applyResults(batch, results);
       }
       return { ok: true, translated };
     } catch (error) {
+      console.error("Plainly translation failed:", error);
       return { ok: false, error: error.message || "Translation failed." };
     } finally {
       translating = false;
@@ -126,7 +201,6 @@
       element.removeAttribute(ORIGINAL);
       element.removeAttribute("title");
     });
-    cache.clear();
     return restored;
   }
 
@@ -139,7 +213,7 @@
         if (settings.languageTranslationEnabled && settings.alwaysTranslateCurrentSite) {
           translatePage({ targetLanguage: settings.targetLanguage || "English" });
         }
-      }, 1000);
+      }, 1200);
     });
     observer.observe(document.body, { childList: true, subtree: true });
   }
