@@ -3,7 +3,7 @@
   "name": "Plainly — Understand Anything Online",
   "short_name": "Plainly",
   "version": "0.4.0",
-  "minimum_chrome_version": "138",
+  "minimum_chrome_version": "114",
   "description": "Translate languages and turn complex online content into plain English while you browse.",
   "icons": {
     "16": "assets/icon16.png",
@@ -36,55 +36,17 @@
     "https://api.openai.com/*",
     "https://generativelanguage.googleapis.com/*",
     "http://localhost/*",
-    "http://127.0.0.1/*",
-    "https://*/*",
-    "http://*/*"
+    "http://127.0.0.1/*"
   ],
   "host_permissions": [
-    "https://github.com/*",
-    "https://*.github.com/*",
-    "https://vercel.com/*",
-    "https://*.vercel.com/*",
-    "https://www.netlify.com/*",
-    "https://app.netlify.com/*",
-    "https://docs.netlify.com/*",
-    "https://stripe.com/*",
-    "https://docs.stripe.com/*",
-    "https://platform.openai.com/*",
-    "https://docs.anthropic.com/*",
-    "https://code.claude.com/*",
-    "https://zapier.com/*",
-    "https://*.zapier.com/*",
-    "https://developers.notion.com/*",
-    "https://*.docusign.com/*",
-    "https://*.hellosign.com/*",
-    "https://app.ironcladapp.com/*",
-    "https://www.skool.com/*",
-    "https://skool.com/*"
+    "http://*/*",
+    "https://*/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "https://github.com/*",
-        "https://*.github.com/*",
-        "https://vercel.com/*",
-        "https://*.vercel.com/*",
-        "https://www.netlify.com/*",
-        "https://app.netlify.com/*",
-        "https://docs.netlify.com/*",
-        "https://stripe.com/*",
-        "https://docs.stripe.com/*",
-        "https://platform.openai.com/*",
-        "https://docs.anthropic.com/*",
-        "https://code.claude.com/*",
-        "https://zapier.com/*",
-        "https://*.zapier.com/*",
-        "https://developers.notion.com/*",
-        "https://*.docusign.com/*",
-        "https://*.hellosign.com/*",
-        "https://app.ironcladapp.com/*",
-        "https://www.skool.com/*",
-        "https://skool.com/*"
+        "http://*/*",
+        "https://*/*"
       ],
       "js": [
         "services/storageService.js",

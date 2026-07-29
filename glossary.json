@@ -572,5 +572,565 @@
     ],
     "category": "general",
     "risk": "high"
+  },
+  "url": {
+    "simple": "a web address",
+    "detailed": "The address of a page on the internet — the text starting with https:// that points your browser to a specific page.",
+    "aliases": [
+      "urls",
+      "web address",
+      "web addresses"
+    ],
+    "category": "web",
+    "risk": "low",
+    "replaceable": false
+  },
+  "browser": {
+    "simple": "the app you use to visit websites",
+    "detailed": "The program you're using right now to view web pages — like Chrome, Safari, Firefox, or Edge.",
+    "aliases": [
+      "web browser",
+      "browsers"
+    ],
+    "category": "web",
+    "risk": "low"
+  },
+  "cookie": {
+    "simple": "a small file a website saves to remember you",
+    "detailed": "A tiny note a website stores in your browser so it can remember things like being logged in or what's in your cart.",
+    "why": "Cookie pop-ups ask permission to store these; you can usually accept or reject them.",
+    "aliases": [
+      "cookies",
+      "browser cookie",
+      "browser cookies"
+    ],
+    "category": "web",
+    "risk": "low"
+  },
+  "cloud": {
+    "simple": "someone else's computers that store your stuff over the internet",
+    "detailed": "Instead of saving files on your own device, 'the cloud' keeps them on powerful computers run by a company, reachable from anywhere online.",
+    "aliases": [
+      "the cloud",
+      "cloud computing"
+    ],
+    "category": "infrastructure",
+    "risk": "low",
+    "replaceable": false
+  },
+  "cloud storage": {
+    "simple": "space to keep your files online",
+    "detailed": "Online storage (like Google Drive, iCloud, or Dropbox) that holds your files so you can reach them from any device.",
+    "aliases": [
+      "online storage"
+    ],
+    "category": "infrastructure",
+    "risk": "low"
+  },
+  "server": {
+    "simple": "a powerful computer that runs a website or app for everyone",
+    "detailed": "A computer, usually in a data center, that stores a website or app and sends it to visitors when they ask for it.",
+    "aliases": [
+      "servers"
+    ],
+    "category": "infrastructure",
+    "risk": "low",
+    "replaceable": false
+  },
+  "download": {
+    "simple": "copy a file from the internet onto your device",
+    "aliases": [
+      "downloading",
+      "downloaded",
+      "downloads"
+    ],
+    "category": "web",
+    "risk": "low",
+    "replaceable": false
+  },
+  "upload": {
+    "simple": "send a file from your device to the internet",
+    "aliases": [
+      "uploading",
+      "uploaded",
+      "uploads"
+    ],
+    "category": "web",
+    "risk": "low",
+    "replaceable": false
+  },
+  "bandwidth": {
+    "simple": "how much data can move over your connection at once",
+    "detailed": "The capacity of your internet connection — more bandwidth means pages, videos, and downloads load faster.",
+    "category": "infrastructure",
+    "risk": "low"
+  },
+  "browser extension": {
+    "simple": "a small add-on that gives your browser extra features",
+    "detailed": "A mini-program you install into your browser to add abilities — like this one, an ad blocker, or a password manager.",
+    "aliases": [
+      "extension",
+      "extensions",
+      "add-on",
+      "add-ons",
+      "addon",
+      "plugin",
+      "plug-in",
+      "plugins"
+    ],
+    "category": "web",
+    "risk": "low"
+  },
+  "pop-up": {
+    "simple": "a small window that appears on top of a page",
+    "aliases": [
+      "popup",
+      "popups",
+      "pop up",
+      "pop-ups"
+    ],
+    "category": "web",
+    "risk": "low"
+  },
+  "incognito": {
+    "simple": "private browsing that doesn't save your history",
+    "detailed": "A browser mode that won't keep your history or cookies after you close it — but your internet provider and the sites can still see you.",
+    "aliases": [
+      "private browsing",
+      "incognito mode",
+      "private mode"
+    ],
+    "category": "web",
+    "risk": "low"
+  },
+  "password": {
+    "simple": "the secret word that proves an account is yours",
+    "why": "Reusing the same password across sites is risky — a leak on one exposes the others.",
+    "next": "Consider a password manager so each site can have a strong, unique one.",
+    "aliases": [
+      "passwords",
+      "passphrase"
+    ],
+    "category": "security",
+    "risk": "medium"
+  },
+  "username": {
+    "simple": "the name you use to sign in",
+    "aliases": [
+      "user name",
+      "usernames"
+    ],
+    "category": "security",
+    "risk": "low"
+  },
+  "login": {
+    "simple": "signing in to prove who you are",
+    "aliases": [
+      "log in",
+      "logging in",
+      "logged in",
+      "sign in",
+      "signing in",
+      "signed in",
+      "log-in"
+    ],
+    "category": "security",
+    "risk": "low",
+    "replaceable": false
+  },
+  "sign up": {
+    "simple": "create a new account",
+    "aliases": [
+      "signup",
+      "sign-up",
+      "register",
+      "registration",
+      "create account",
+      "create an account"
+    ],
+    "category": "security",
+    "risk": "low",
+    "replaceable": false
+  },
+  "credentials": {
+    "simple": "your login details (like username and password)",
+    "aliases": [
+      "login credentials"
+    ],
+    "category": "security",
+    "risk": "medium"
+  },
+  "encryption": {
+    "simple": "scrambling data so only the right people can read it",
+    "detailed": "A way of locking information so that even if someone intercepts it, they just see gibberish without the key.",
+    "aliases": [
+      "encrypted",
+      "encrypt",
+      "end-to-end encryption"
+    ],
+    "category": "security",
+    "risk": "low",
+    "replaceable": false
+  },
+  "phishing": {
+    "simple": "a scam that tricks you into giving up passwords or money",
+    "detailed": "Fake emails, texts, or sites pretending to be someone you trust, trying to get you to hand over sensitive info.",
+    "why": "Phishing is one of the most common ways accounts get hacked.",
+    "next": "When in doubt, don't click — go to the real site directly and check.",
+    "aliases": [
+      "phishing scam",
+      "phishing attack"
+    ],
+    "category": "security",
+    "risk": "high"
+  },
+  "malware": {
+    "simple": "harmful software designed to damage or spy on your device",
+    "aliases": [
+      "spyware",
+      "ransomware",
+      "malicious software"
+    ],
+    "category": "security",
+    "risk": "high"
+  },
+  "vpn": {
+    "simple": "a tool that hides and secures your internet connection",
+    "detailed": "A Virtual Private Network routes your traffic through an encrypted tunnel, masking your location and protecting data on public Wi-Fi.",
+    "aliases": [
+      "virtual private network"
+    ],
+    "category": "security",
+    "risk": "low",
+    "replaceable": false
+  },
+  "firewall": {
+    "simple": "a barrier that blocks unwanted network traffic",
+    "category": "security",
+    "risk": "low"
+  },
+  "captcha": {
+    "simple": "a quick test that proves you're human, not a bot",
+    "detailed": "Those 'select all the traffic lights' or 'I'm not a robot' checks that stop automated programs.",
+    "aliases": [
+      "recaptcha",
+      "captchas"
+    ],
+    "category": "security",
+    "risk": "low",
+    "replaceable": false
+  },
+  "verification code": {
+    "simple": "a one-time code that confirms it's really you",
+    "detailed": "A short number texted or emailed to you, or shown in an app, that you enter to prove you have access to your own account.",
+    "aliases": [
+      "one-time code",
+      "otp",
+      "one-time passcode",
+      "security code",
+      "confirmation code"
+    ],
+    "category": "security",
+    "risk": "low"
+  },
+  "session": {
+    "simple": "the period you're actively signed in",
+    "detailed": "The stretch of time between logging in and logging out (or timing out); 'session expired' means you need to sign in again.",
+    "aliases": [
+      "user session",
+      "session expired",
+      "session timeout"
+    ],
+    "category": "security",
+    "risk": "low",
+    "replaceable": false
+  },
+  "metadata": {
+    "simple": "data that describes other data",
+    "detailed": "Extra hidden details attached to a file or record — like the date a photo was taken or who created a document.",
+    "category": "data",
+    "risk": "low"
+  },
+  "data breach": {
+    "simple": "when private data is stolen or exposed",
+    "why": "If a company you use has a breach, your email or password may need changing.",
+    "next": "Change the password there (and anywhere you reused it) and watch for scams.",
+    "aliases": [
+      "data leak",
+      "security breach"
+    ],
+    "category": "security",
+    "risk": "high"
+  },
+  "backup": {
+    "simple": "a saved copy you can restore if something is lost",
+    "aliases": [
+      "back up",
+      "backups",
+      "backed up"
+    ],
+    "category": "data",
+    "risk": "low"
+  },
+  "sync": {
+    "simple": "keep the same data matched across your devices",
+    "detailed": "When something 'syncs,' a change on one device automatically shows up on your others.",
+    "aliases": [
+      "syncing",
+      "synced",
+      "synchronize",
+      "synchronise",
+      "sync up"
+    ],
+    "category": "data",
+    "risk": "low"
+  },
+  "pdf": {
+    "simple": "a document format that looks the same everywhere",
+    "detailed": "A file type for documents that keeps its exact layout no matter what device or app opens it.",
+    "aliases": [
+      "pdfs",
+      "pdf file"
+    ],
+    "category": "files",
+    "risk": "low",
+    "replaceable": false
+  },
+  "csv": {
+    "simple": "a plain spreadsheet file of rows and columns",
+    "detailed": "A simple text file where each line is a row and commas separate the columns — openable in Excel or Google Sheets.",
+    "aliases": [
+      "csv file",
+      "comma-separated values"
+    ],
+    "category": "files",
+    "risk": "low",
+    "replaceable": false
+  },
+  "zip file": {
+    "simple": "a compressed folder bundled into one smaller file",
+    "detailed": "Several files squeezed together into a single, smaller file for easy sending; you 'unzip' it to get the originals back.",
+    "aliases": [
+      "zip",
+      "zipped",
+      "zip archive",
+      ".zip"
+    ],
+    "category": "files",
+    "risk": "low",
+    "replaceable": false
+  },
+  "subscription": {
+    "simple": "a recurring payment for ongoing access",
+    "why": "Subscriptions renew automatically until you cancel.",
+    "next": "Check the renewal date and how to cancel before you're charged again.",
+    "aliases": [
+      "subscribe",
+      "subscriptions",
+      "subscribed"
+    ],
+    "category": "billing",
+    "risk": "medium"
+  },
+  "free trial": {
+    "simple": "temporary free access that may start charging you later",
+    "why": "Many trials ask for a card and bill you automatically when the trial ends.",
+    "next": "Note when the trial ends and set a reminder to cancel if you don't want it.",
+    "aliases": [
+      "trial period"
+    ],
+    "category": "billing",
+    "risk": "medium"
+  },
+  "dashboard": {
+    "simple": "the main screen where you manage and see everything",
+    "detailed": "A control-panel page that gathers your key info, settings, and actions in one place.",
+    "aliases": [
+      "dashboards"
+    ],
+    "category": "product",
+    "risk": "low"
+  },
+  "onboarding": {
+    "simple": "the guided setup that helps you get started",
+    "aliases": [
+      "onboard",
+      "getting started"
+    ],
+    "category": "product",
+    "risk": "low"
+  },
+  "saas": {
+    "simple": "software you use online by subscription instead of installing",
+    "detailed": "Software as a Service — apps you access through a browser and pay for over time, like Gmail, Notion, or Netflix.",
+    "aliases": [
+      "software as a service"
+    ],
+    "category": "product",
+    "risk": "low",
+    "replaceable": false
+  },
+  "beta": {
+    "simple": "an early version still being tested",
+    "detailed": "A feature or product released early so real users can try it; expect rough edges and occasional bugs.",
+    "aliases": [
+      "beta version",
+      "beta test",
+      "public beta"
+    ],
+    "category": "product",
+    "risk": "low"
+  },
+  "software update": {
+    "simple": "a new version that fixes or improves an app",
+    "detailed": "A refreshed version of a program that patches problems, closes security holes, or adds features.",
+    "aliases": [
+      "app update",
+      "system update",
+      "patch",
+      "update available",
+      "security update"
+    ],
+    "category": "product",
+    "risk": "low"
+  },
+  "notification": {
+    "simple": "an alert telling you something happened",
+    "aliases": [
+      "notifications",
+      "push notification",
+      "push notifications",
+      "alerts"
+    ],
+    "category": "product",
+    "risk": "low"
+  },
+  "opt-in": {
+    "simple": "actively choosing to take part or receive something",
+    "detailed": "'Opt in' means you say yes on purpose; 'opt out' means you say no or leave. Unsubscribing is opting out of emails.",
+    "aliases": [
+      "opt in",
+      "opt-out",
+      "opt out",
+      "unsubscribe"
+    ],
+    "category": "product",
+    "risk": "low"
+  },
+  "algorithm": {
+    "simple": "a set of step-by-step rules a computer follows",
+    "detailed": "A recipe of instructions software uses to make a decision — like what to show you in a feed or search results.",
+    "aliases": [
+      "algorithms"
+    ],
+    "category": "ai",
+    "risk": "low",
+    "replaceable": false
+  },
+  "machine learning": {
+    "simple": "software that improves by learning from examples",
+    "detailed": "Instead of being told every rule, the program studies lots of data and figures out patterns on its own.",
+    "aliases": [],
+    "category": "ai",
+    "risk": "low",
+    "replaceable": false
+  },
+  "large language model": {
+    "simple": "the kind of AI that understands and writes text",
+    "detailed": "An AI (an LLM) trained on huge amounts of text so it can answer questions, write, and summarize — the tech behind chatbots.",
+    "aliases": [
+      "llm",
+      "llms",
+      "language model"
+    ],
+    "category": "ai",
+    "risk": "low",
+    "replaceable": false
+  },
+  "prompt": {
+    "simple": "the instruction or question you give an AI",
+    "detailed": "What you type to an AI tool to tell it what you want; better prompts usually get better answers.",
+    "aliases": [
+      "prompts",
+      "prompting"
+    ],
+    "category": "ai",
+    "risk": "low",
+    "replaceable": false
+  },
+  "chatbot": {
+    "simple": "an app you talk to that answers in plain language",
+    "aliases": [
+      "chatbots",
+      "ai assistant",
+      "ai chatbot"
+    ],
+    "category": "ai",
+    "risk": "low"
+  },
+  "generative ai": {
+    "simple": "AI that creates new text, images, or code",
+    "detailed": "AI that produces original content — writing, pictures, audio — from a description you give it.",
+    "aliases": [
+      "gen ai",
+      "genai",
+      "generative artificial intelligence"
+    ],
+    "category": "ai",
+    "risk": "low",
+    "replaceable": false
+  },
+  "hallucination": {
+    "simple": "when an AI states something false as if it were true",
+    "why": "AI can sound confident while being wrong, so it's worth double-checking important facts.",
+    "aliases": [
+      "hallucinate",
+      "ai hallucination",
+      "hallucinations"
+    ],
+    "category": "ai",
+    "risk": "medium"
+  },
+  "operating system": {
+    "simple": "the core software that runs your whole device",
+    "detailed": "The main system your device runs on — like Windows, macOS, iOS, or Android — that everything else sits on top of.",
+    "aliases": [
+      "os",
+      "operating systems"
+    ],
+    "category": "computing",
+    "risk": "low",
+    "replaceable": false
+  },
+  "crash": {
+    "simple": "when an app or device suddenly stops working",
+    "aliases": [
+      "crashed",
+      "crashing",
+      "crashes"
+    ],
+    "category": "computing",
+    "risk": "low"
+  },
+  "reboot": {
+    "simple": "restart the device to fix glitches or apply changes",
+    "aliases": [
+      "restart",
+      "reboot",
+      "rebooting",
+      "power cycle",
+      "reboots"
+    ],
+    "category": "computing",
+    "risk": "low"
+  },
+  "bug": {
+    "simple": "a mistake in software that makes it behave wrong",
+    "aliases": [
+      "bugs",
+      "software bug"
+    ],
+    "category": "computing",
+    "risk": "low"
   }
 }
