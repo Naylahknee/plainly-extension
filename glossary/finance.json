@@ -1,0 +1,298 @@
+{
+  "_meta": {
+    "version": 1,
+    "domain": "finance",
+    "description": "Plainly's money & banking pack. Plain-English meanings for the jargon on bank, credit-card, loan, and investing sites. Not financial advice; for big decisions, talk to a professional.",
+    "fields": "see glossary.json _meta / SCHEMA.md"
+  },
+  "apr": {
+    "simple": "the yearly cost of borrowing, shown as a percentage",
+    "detailed": "Annual Percentage Rate — what a loan or credit card really costs you per year, including interest and most fees. Higher APR means the debt grows faster.",
+    "why": "A card with 25% APR costs far more to carry a balance on than one at 12%.",
+    "next": "Compare the APR, not just the monthly payment, when choosing a card or loan.",
+    "aliases": ["annual percentage rate"],
+    "category": "credit",
+    "risk": "medium",
+    "replaceable": false
+  },
+  "apy": {
+    "simple": "the yearly return on savings, including compounding",
+    "detailed": "Annual Percentage Yield — how much a savings account or CD earns in a year once interest-on-interest is counted. Higher is better for you.",
+    "aliases": ["annual percentage yield"],
+    "category": "saving",
+    "risk": "low",
+    "replaceable": false
+  },
+  "interest rate": {
+    "simple": "the percentage charged to borrow, or paid to save",
+    "detailed": "The price of money over time — you pay it on what you borrow, and earn it on what you save.",
+    "aliases": ["interest", "rate of interest"],
+    "category": "credit",
+    "risk": "low"
+  },
+  "compound interest": {
+    "simple": "interest that earns interest over time",
+    "detailed": "When your interest itself starts earning interest, money grows faster and faster — great for savings, painful for debt.",
+    "category": "saving",
+    "risk": "low"
+  },
+  "principal": {
+    "simple": "the original amount borrowed or invested, before interest",
+    "detailed": "The core sum — the actual loan amount or deposit — separate from any interest added on top.",
+    "category": "credit",
+    "risk": "low"
+  },
+  "credit score": {
+    "simple": "a number that rates how reliably you repay debt",
+    "detailed": "A 3-digit score (roughly 300–850) lenders use to judge how risky it is to lend to you. Higher usually means better rates.",
+    "why": "It affects whether you're approved for loans and cards, and how much interest you'll pay.",
+    "aliases": ["fico score", "fico", "credit rating"],
+    "category": "credit",
+    "risk": "medium"
+  },
+  "credit report": {
+    "simple": "a detailed record of your borrowing history",
+    "detailed": "A file showing your loans, cards, payment history, and debts. Your credit score is calculated from it.",
+    "next": "You can check it for free periodically and dispute mistakes.",
+    "category": "credit",
+    "risk": "medium"
+  },
+  "credit limit": {
+    "simple": "the most you're allowed to borrow on a card",
+    "aliases": ["credit line", "line of credit"],
+    "category": "credit",
+    "risk": "low"
+  },
+  "credit utilization": {
+    "simple": "how much of your available credit you're using",
+    "detailed": "The share of your credit limit you've spent. Keeping it low (often under 30%) tends to help your credit score.",
+    "aliases": ["utilization rate"],
+    "category": "credit",
+    "risk": "low"
+  },
+  "minimum payment": {
+    "simple": "the smallest amount you must pay this month to stay current",
+    "why": "Paying only the minimum keeps the account in good standing but lets interest pile up on the rest.",
+    "next": "Pay more than the minimum whenever you can to cut interest.",
+    "aliases": ["minimum due", "min payment"],
+    "category": "credit",
+    "risk": "medium"
+  },
+  "statement balance": {
+    "simple": "what you owed at the end of the billing cycle",
+    "detailed": "The total from your last statement. Paying this in full by the due date usually means no interest.",
+    "aliases": ["statement", "billing statement"],
+    "category": "billing",
+    "risk": "low"
+  },
+  "available balance": {
+    "simple": "the money you can actually spend right now",
+    "detailed": "Your balance minus holds and pending charges — often less than the 'current balance' shown.",
+    "category": "banking",
+    "risk": "low"
+  },
+  "overdraft": {
+    "simple": "spending more than you have in your account",
+    "detailed": "When a payment goes through even though your balance can't cover it, leaving you negative — usually with a fee.",
+    "why": "Overdraft fees add up fast and can trigger more of them.",
+    "aliases": ["overdrawn", "overdraft fee", "overdraft protection"],
+    "category": "banking",
+    "risk": "high"
+  },
+  "ach": {
+    "simple": "a standard electronic bank-to-bank transfer",
+    "detailed": "Automated Clearing House — the network behind direct deposit, autopay, and moving money between banks. Usually free but takes 1–3 days.",
+    "aliases": ["ach transfer", "automated clearing house"],
+    "category": "banking",
+    "risk": "low",
+    "replaceable": false
+  },
+  "wire transfer": {
+    "simple": "a fast, usually same-day bank transfer",
+    "detailed": "A direct electronic transfer of funds between banks — quick and hard to reverse, so it's a common target for scams.",
+    "why": "Wires are often irreversible; if you're tricked into sending one, the money may be gone.",
+    "aliases": ["wire", "bank wire"],
+    "category": "banking",
+    "risk": "high"
+  },
+  "routing number": {
+    "simple": "a 9-digit code that identifies your bank",
+    "detailed": "The number that tells the system which bank an account belongs to, used for transfers and direct deposit.",
+    "aliases": ["aba number", "aba routing number"],
+    "category": "banking",
+    "risk": "low",
+    "replaceable": false
+  },
+  "direct deposit": {
+    "simple": "having pay or benefits sent straight to your account",
+    "aliases": ["direct deposits"],
+    "category": "banking",
+    "risk": "low"
+  },
+  "autopay": {
+    "simple": "automatic recurring payments from your account",
+    "why": "Handy for avoiding late fees, but watch the balance so autopay doesn't overdraw you.",
+    "aliases": ["auto pay", "automatic payment", "automatic payments", "auto-pay"],
+    "category": "billing",
+    "risk": "low"
+  },
+  "late fee": {
+    "simple": "a charge for paying after the due date",
+    "aliases": ["late fees", "late charge"],
+    "category": "billing",
+    "risk": "medium"
+  },
+  "annual fee": {
+    "simple": "a yearly charge just for having a card or account",
+    "aliases": ["yearly fee"],
+    "category": "billing",
+    "risk": "medium"
+  },
+  "cash advance": {
+    "simple": "borrowing cash against your credit card — usually expensive",
+    "detailed": "Taking cash from a credit card. It typically has a higher rate than purchases and starts charging interest immediately, with a fee.",
+    "why": "Cash advances are one of the costliest ways to use a card.",
+    "category": "credit",
+    "risk": "high"
+  },
+  "balance transfer": {
+    "simple": "moving debt from one card to another, often at lower interest",
+    "detailed": "Shifting what you owe onto a new card — sometimes at 0% for a while — to pay it down faster. Usually has a transfer fee.",
+    "category": "credit",
+    "risk": "medium"
+  },
+  "grace period": {
+    "simple": "time to pay before interest or penalties kick in",
+    "detailed": "The window (often around 21–25 days on cards) where paying in full means you owe no interest.",
+    "category": "credit",
+    "risk": "low"
+  },
+  "refinance": {
+    "simple": "replace a loan with a new one on better terms",
+    "detailed": "Take out a new loan to pay off an old one — usually to get a lower rate or smaller payment.",
+    "aliases": ["refinancing", "refi"],
+    "category": "loans",
+    "risk": "medium"
+  },
+  "escrow": {
+    "simple": "money held by a neutral third party until conditions are met",
+    "detailed": "Funds parked with a middleman — common in home buying, where taxes and insurance are collected monthly and paid on your behalf.",
+    "category": "loans",
+    "risk": "low"
+  },
+  "mortgage": {
+    "simple": "a loan used to buy a home, with the home as security",
+    "detailed": "A long-term loan for property; if you stop paying, the lender can take the home.",
+    "aliases": ["mortgages", "home loan"],
+    "category": "loans",
+    "risk": "medium"
+  },
+  "amortization": {
+    "simple": "paying off a loan in steady scheduled payments over time",
+    "detailed": "How a loan balance shrinks with each payment; early on, more of each payment goes to interest than to principal.",
+    "aliases": ["amortize", "amortized", "amortisation"],
+    "category": "loans",
+    "risk": "low"
+  },
+  "collateral": {
+    "simple": "something you pledge that the lender can take if you don't repay",
+    "detailed": "An asset (like a car or house) backing a loan; default and the lender can seize it.",
+    "category": "loans",
+    "risk": "high"
+  },
+  "down payment": {
+    "simple": "the upfront cash you pay toward a big purchase",
+    "detailed": "The portion you pay yourself (e.g. on a house or car); the rest is financed with a loan.",
+    "category": "loans",
+    "risk": "low"
+  },
+  "principal balance": {
+    "simple": "how much of the original loan you still owe",
+    "category": "loans",
+    "risk": "low"
+  },
+  "fdic": {
+    "simple": "government insurance that protects bank deposits",
+    "detailed": "The FDIC insures money in U.S. banks (up to a limit per depositor) so you don't lose it if the bank fails.",
+    "aliases": ["fdic insured", "fdic-insured"],
+    "category": "banking",
+    "risk": "low",
+    "replaceable": false
+  },
+  "chargeback": {
+    "simple": "reversing a card charge by disputing it with your bank",
+    "detailed": "When you ask your card issuer to undo a payment — for fraud or a problem with a purchase — and get the money back.",
+    "aliases": ["charge back", "dispute a charge"],
+    "category": "billing",
+    "risk": "low"
+  },
+  "inflation": {
+    "simple": "the gradual rise in prices that shrinks what money buys",
+    "category": "economy",
+    "risk": "low"
+  },
+  "capital gains": {
+    "simple": "the profit when you sell something for more than you paid",
+    "detailed": "The gain on selling an investment or asset; it's often taxed.",
+    "aliases": ["capital gain"],
+    "category": "investing",
+    "risk": "low"
+  },
+  "dividend": {
+    "simple": "a share of a company's profits paid to its investors",
+    "aliases": ["dividends"],
+    "category": "investing",
+    "risk": "low"
+  },
+  "index fund": {
+    "simple": "an investment that tracks a whole market instead of picking stocks",
+    "detailed": "A fund that mirrors a market index (like the S&P 500), giving broad, low-cost diversification.",
+    "aliases": ["index funds"],
+    "category": "investing",
+    "risk": "low"
+  },
+  "etf": {
+    "simple": "a basket of investments you can buy like a single stock",
+    "detailed": "Exchange-Traded Fund — a bundle of assets that trades on an exchange, often used for low-cost, diversified investing.",
+    "aliases": ["etfs", "exchange-traded fund", "exchange traded fund"],
+    "category": "investing",
+    "risk": "low",
+    "replaceable": false
+  },
+  "portfolio": {
+    "simple": "the full collection of your investments",
+    "aliases": ["investment portfolio"],
+    "category": "investing",
+    "risk": "low"
+  },
+  "diversification": {
+    "simple": "spreading money across many investments to lower risk",
+    "detailed": "Not putting all your eggs in one basket, so one bad investment doesn't sink everything.",
+    "aliases": ["diversify", "diversified"],
+    "category": "investing",
+    "risk": "low"
+  },
+  "401k": {
+    "simple": "a workplace retirement savings account with tax perks",
+    "detailed": "An employer-based plan where you save for retirement pre-tax, often with a company match — free money you don't want to leave on the table.",
+    "aliases": ["401(k)", "401 k"],
+    "category": "retirement",
+    "risk": "low",
+    "replaceable": false
+  },
+  "ira": {
+    "simple": "a personal retirement account with tax advantages",
+    "detailed": "Individual Retirement Account — a tax-favored account you open yourself to save for retirement (Traditional or Roth).",
+    "aliases": ["roth ira", "traditional ira"],
+    "category": "retirement",
+    "risk": "low",
+    "replaceable": false
+  },
+  "vesting": {
+    "simple": "gradually earning full ownership of something over time",
+    "detailed": "Common with employer match or stock: you fully own it only after staying long enough. Leave early and you may forfeit the unvested part.",
+    "aliases": ["vested", "vest", "vesting schedule"],
+    "category": "retirement",
+    "risk": "medium"
+  }
+}

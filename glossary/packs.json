@@ -60,6 +60,66 @@
         { "match": "hellosign.com", "name": "Dropbox Sign", "purpose": "a service for signing documents electronically" },
         { "match": "ironcladapp.com", "name": "Ironclad", "purpose": "a tool for managing and signing contracts" }
       ]
+    },
+    {
+      "id": "finance",
+      "label": "Money & banking",
+      "tagline": "Money, in plain English",
+      "example": "e.g. “Your card has a 24.99% APR, and paying only the minimum payment lets the balance keep accruing interest.”",
+      "promptDomainLabel": "banking, credit, loans, and personal finance",
+      "file": "glossary/finance.json",
+      "riskWords": [
+        "overdraft",
+        "wire transfer",
+        "cash advance",
+        "late fee",
+        "penalty",
+        "foreclosure",
+        "default",
+        "collateral",
+        "non-refundable",
+        "irreversible",
+        "variable rate",
+        "balloon payment"
+      ],
+      "sitePatterns": [
+        { "match": "chase.com", "name": "Chase", "purpose": "an online bank and credit-card site" },
+        { "match": "bankofamerica.com", "name": "Bank of America", "purpose": "an online banking site" },
+        { "match": "wellsfargo.com", "name": "Wells Fargo", "purpose": "an online banking site" },
+        { "match": "paypal.com", "name": "PayPal", "purpose": "a service for sending and receiving money online" },
+        { "match": "creditkarma.com", "name": "Credit Karma", "purpose": "a site that shows your credit score and reports" },
+        { "match": "fidelity.com", "name": "Fidelity", "purpose": "an investing and retirement-account site" },
+        { "match": "vanguard.com", "name": "Vanguard", "purpose": "an investing and retirement-account site" },
+        { "match": "coinbase.com", "name": "Coinbase", "purpose": "a site for buying and holding cryptocurrency" }
+      ]
+    },
+    {
+      "id": "health",
+      "label": "Health & insurance",
+      "tagline": "Health coverage, in plain English",
+      "example": "e.g. “This is out-of-network, so after your deductible you owe 40% coinsurance until you hit your out-of-pocket maximum.”",
+      "promptDomainLabel": "health insurance, medical bills, and patient portals",
+      "file": "glossary/health.json",
+      "riskWords": [
+        "out-of-network",
+        "not covered",
+        "denied",
+        "prior authorization",
+        "balance billing",
+        "surprise bill",
+        "out-of-pocket",
+        "deductible",
+        "penalty",
+        "non-covered"
+      ],
+      "sitePatterns": [
+        { "match": "mychart", "name": "MyChart", "purpose": "a patient portal for seeing records and messaging your doctor" },
+        { "match": "healthcare.gov", "name": "HealthCare.gov", "purpose": "the U.S. marketplace for buying health insurance" },
+        { "match": "cvs.com", "name": "CVS", "purpose": "a pharmacy site for prescriptions and health products" },
+        { "match": "goodrx.com", "name": "GoodRx", "purpose": "a site that compares prescription drug prices" },
+        { "match": "uhc.com", "name": "UnitedHealthcare", "purpose": "a health-insurance member site" },
+        { "match": "cigna.com", "name": "Cigna", "purpose": "a health-insurance member site" }
+      ]
     }
   ]
 }

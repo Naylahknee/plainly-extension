@@ -50,10 +50,12 @@ pick a provider — **Claude**, **OpenAI**, **Gemini**, or a **local model
 
 Plainly is multi-domain. Each knowledge area is a **pack** listed in
 `glossary/packs.json`; the active one is chosen with the domain picker
-(in the web app, and the popup). Today: **Tech** (`glossary.json`) and
-**Legal & contracts** (`glossary/legal.json`). Add a pack by dropping a new
-`glossary/<id>.json` and a `packs.json` entry — the engine, UI, and AI
-prompts pick it up with no code changes.
+(in the web app, and the popup). Today: **Tech** (`glossary.json`),
+**Legal & contracts** (`glossary/legal.json`), **Money & banking**
+(`glossary/finance.json`), and **Health & insurance**
+(`glossary/health.json`). Add a pack by dropping a new `glossary/<id>.json`
+and a `packs.json` entry — the engine, UI, and AI prompts pick it up with no
+code changes.
 
 Every translation returns the same labeled structure (`PlainlyResult`),
 exportable with **Copy as JSON** — see [`SCHEMA.md`](SCHEMA.md) for the

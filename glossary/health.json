@@ -1,0 +1,244 @@
+{
+  "_meta": {
+    "version": 1,
+    "domain": "health",
+    "description": "Plainly's health & insurance pack. Plain-English meanings for the jargon on insurance, patient-portal, and pharmacy sites. Not medical or insurance advice; check with your provider or plan for specifics.",
+    "fields": "see glossary.json _meta / SCHEMA.md"
+  },
+  "premium": {
+    "simple": "the amount you pay for coverage each month",
+    "detailed": "Your regular payment to keep an insurance plan active — owed whether or not you use any care.",
+    "aliases": ["monthly premium", "insurance premium"],
+    "category": "cost",
+    "risk": "low"
+  },
+  "deductible": {
+    "simple": "what you pay yourself before insurance starts helping",
+    "detailed": "The amount you cover out of pocket each year before your plan begins paying its share.",
+    "why": "A lower premium often comes with a higher deductible, so you pay more when you actually need care.",
+    "aliases": ["annual deductible", "deductibles"],
+    "category": "cost",
+    "risk": "medium"
+  },
+  "copay": {
+    "simple": "a fixed fee you pay for a visit or prescription",
+    "detailed": "A set dollar amount (like $25 for a doctor visit) you pay at the time of care; insurance covers the rest.",
+    "aliases": ["co-pay", "copayment", "co-payment", "copays"],
+    "category": "cost",
+    "risk": "low"
+  },
+  "coinsurance": {
+    "simple": "your percentage share of a cost after the deductible",
+    "detailed": "Once you've met your deductible, you pay a percentage (say 20%) and insurance pays the rest.",
+    "aliases": ["co-insurance"],
+    "category": "cost",
+    "risk": "medium"
+  },
+  "out-of-pocket maximum": {
+    "simple": "the most you'll pay in a year before insurance covers everything",
+    "detailed": "A yearly cap on your own spending; after you hit it, the plan pays 100% of covered care.",
+    "why": "It's your worst-case cost for the year — worth knowing before a big treatment.",
+    "aliases": ["out of pocket maximum", "out-of-pocket max", "oop max", "maximum out-of-pocket"],
+    "category": "cost",
+    "risk": "medium"
+  },
+  "out-of-pocket": {
+    "simple": "costs you pay yourself, not the insurer",
+    "aliases": ["out of pocket"],
+    "category": "cost",
+    "risk": "low"
+  },
+  "in-network": {
+    "simple": "doctors and hospitals your plan has cheaper deals with",
+    "detailed": "Providers your insurance has contracted with, so you pay less. Staying in-network is usually much cheaper.",
+    "aliases": ["in network", "network provider"],
+    "category": "network",
+    "risk": "low"
+  },
+  "out-of-network": {
+    "simple": "providers your plan hasn't contracted with — usually costs more",
+    "detailed": "Care from a doctor or facility outside your plan's network; you often pay a bigger share, sometimes the full bill.",
+    "why": "Out-of-network care can lead to surprise bills.",
+    "aliases": ["out of network"],
+    "category": "network",
+    "risk": "high"
+  },
+  "explanation of benefits": {
+    "simple": "a summary of what insurance paid and what you owe",
+    "detailed": "An EOB is not a bill — it's a statement showing how a claim was processed: the charge, what the plan covered, and your share.",
+    "aliases": ["eob"],
+    "category": "claims",
+    "risk": "low",
+    "replaceable": false
+  },
+  "claim": {
+    "simple": "a request to your insurer to pay for care you received",
+    "detailed": "The bill your provider (or you) sends to insurance so it pays its share.",
+    "aliases": ["insurance claim", "claims"],
+    "category": "claims",
+    "risk": "low"
+  },
+  "prior authorization": {
+    "simple": "insurance approval you need before certain care is covered",
+    "detailed": "For some treatments or drugs, the plan must sign off first, or it won't pay. It can cause delays.",
+    "why": "Skipping required prior authorization can leave you with the full bill.",
+    "aliases": ["preauthorization", "pre-authorization", "prior auth", "pre-auth", "precertification"],
+    "category": "coverage",
+    "risk": "medium"
+  },
+  "referral": {
+    "simple": "your main doctor's OK to see a specialist",
+    "detailed": "Some plans require your primary doctor to refer you before they'll cover a specialist visit.",
+    "aliases": ["referrals"],
+    "category": "coverage",
+    "risk": "low"
+  },
+  "formulary": {
+    "simple": "the list of drugs your plan will help pay for",
+    "detailed": "Each plan covers specific medications, often in price tiers. Drugs off the list cost more or aren't covered.",
+    "aliases": ["drug formulary", "drug list"],
+    "category": "pharmacy",
+    "risk": "medium"
+  },
+  "generic": {
+    "simple": "a cheaper drug with the same active ingredient as the brand",
+    "detailed": "A copy of a brand-name medication that works the same way but usually costs much less.",
+    "aliases": ["generic drug", "generic medication"],
+    "category": "pharmacy",
+    "risk": "low"
+  },
+  "primary care physician": {
+    "simple": "your main everyday doctor",
+    "detailed": "The doctor you see first for most needs, who coordinates your care and referrals.",
+    "aliases": ["pcp", "primary care provider", "primary care doctor"],
+    "category": "providers",
+    "risk": "low",
+    "replaceable": false
+  },
+  "provider": {
+    "simple": "any doctor, clinic, or professional who gives you care",
+    "aliases": ["healthcare provider", "care provider", "providers"],
+    "category": "providers",
+    "risk": "low"
+  },
+  "specialist": {
+    "simple": "a doctor focused on one area of medicine",
+    "detailed": "A physician with deep training in a specific field (like a cardiologist or dermatologist), usually seen by referral.",
+    "aliases": ["specialists"],
+    "category": "providers",
+    "risk": "low"
+  },
+  "hmo": {
+    "simple": "a lower-cost plan that keeps you in-network and needs referrals",
+    "detailed": "Health Maintenance Organization — cheaper premiums, but you must use in-network providers and get referrals for specialists.",
+    "aliases": ["health maintenance organization"],
+    "category": "plans",
+    "risk": "low",
+    "replaceable": false
+  },
+  "ppo": {
+    "simple": "a flexible plan that lets you see more providers without referrals",
+    "detailed": "Preferred Provider Organization — more freedom to pick doctors and skip referrals, usually for a higher premium.",
+    "aliases": ["preferred provider organization"],
+    "category": "plans",
+    "risk": "low",
+    "replaceable": false
+  },
+  "hsa": {
+    "simple": "a tax-free savings account for medical costs",
+    "detailed": "Health Savings Account — money you set aside pre-tax for healthcare, paired with a high-deductible plan. Unused funds roll over.",
+    "aliases": ["health savings account"],
+    "category": "accounts",
+    "risk": "low",
+    "replaceable": false
+  },
+  "fsa": {
+    "simple": "a tax-free account for medical costs that resets yearly",
+    "detailed": "Flexible Spending Account — pre-tax money for healthcare, but you usually must spend it within the year or lose it.",
+    "aliases": ["flexible spending account"],
+    "category": "accounts",
+    "risk": "medium",
+    "replaceable": false
+  },
+  "balance billing": {
+    "simple": "being billed for the gap between the charge and what insurance paid",
+    "detailed": "When an out-of-network provider bills you for the leftover amount insurance didn't cover — sometimes a surprise bill.",
+    "aliases": ["balance bill", "surprise bill", "surprise billing"],
+    "category": "claims",
+    "risk": "high"
+  },
+  "allowed amount": {
+    "simple": "the price your insurer agrees a service is worth",
+    "detailed": "The maximum your plan will count toward a covered service; your share is based on this, not the sticker price.",
+    "aliases": ["allowable amount", "allowed charge"],
+    "category": "claims",
+    "risk": "low"
+  },
+  "preventive care": {
+    "simple": "routine check-ups and screenings, often fully covered",
+    "detailed": "Care that keeps you healthy — annual physicals, vaccines, screenings — which many plans cover at no cost to you.",
+    "aliases": ["preventative care", "preventive services"],
+    "category": "coverage",
+    "risk": "low"
+  },
+  "telehealth": {
+    "simple": "seeing a doctor by video or phone instead of in person",
+    "aliases": ["telemedicine", "virtual visit", "virtual care"],
+    "category": "care",
+    "risk": "low"
+  },
+  "prescription": {
+    "simple": "a doctor's order for a specific medication",
+    "aliases": ["prescriptions", "rx", "script"],
+    "category": "pharmacy",
+    "risk": "low"
+  },
+  "refill": {
+    "simple": "getting another supply of a medication you already have",
+    "aliases": ["refills", "prescription refill"],
+    "category": "pharmacy",
+    "risk": "low"
+  },
+  "dosage": {
+    "simple": "how much medicine to take and how often",
+    "aliases": ["dose", "dosing"],
+    "category": "pharmacy",
+    "risk": "medium"
+  },
+  "open enrollment": {
+    "simple": "the yearly window to pick or change your health plan",
+    "detailed": "The set period each year when you can sign up for or switch insurance; outside it you usually need a special reason.",
+    "aliases": ["enrollment period"],
+    "category": "plans",
+    "risk": "medium"
+  },
+  "hipaa": {
+    "simple": "the law that keeps your health information private",
+    "detailed": "HIPAA sets rules for how providers and insurers protect and share your medical records.",
+    "aliases": ["hippa"],
+    "category": "privacy",
+    "risk": "low",
+    "replaceable": false
+  },
+  "patient portal": {
+    "simple": "the website where you view your records and message your doctor",
+    "detailed": "A secure site or app to see test results, book visits, request refills, and contact your care team.",
+    "aliases": ["patient portals", "health portal"],
+    "category": "care",
+    "risk": "low"
+  },
+  "electronic health record": {
+    "simple": "your digital medical chart",
+    "detailed": "An EHR (or EMR) is the digital record of your health history that providers use and share.",
+    "aliases": ["ehr", "emr", "electronic medical record"],
+    "category": "care",
+    "risk": "low",
+    "replaceable": false
+  },
+  "diagnosis": {
+    "simple": "the name a doctor gives to what's wrong",
+    "aliases": ["diagnoses", "diagnostic"],
+    "category": "care",
+    "risk": "medium"
+  }
+}
