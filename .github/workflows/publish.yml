@@ -1,0 +1,77 @@
+name: Publish to Chrome Web Store
+
+# Publishes a new version of Plainly to the Chrome Web Store.
+#
+# Runs when you push a version tag (e.g. v0.4.1), or when you trigger it
+# by hand from the Actions tab. It builds the upload zip and sends it to
+# the store using the Chrome Web Store API.
+#
+# One-time setup (repo Settings -> Secrets and variables -> Actions):
+#   CHROME_EXTENSION_ID     the item's ID from the developer dashboard URL
+#   CHROME_CLIENT_ID        OAuth client id
+#   CHROME_CLIENT_SECRET    OAuth client secret
+#   CHROME_REFRESH_TOKEN    OAuth refresh token
+# See store/AUTO-PUBLISH.md for exactly how to get each of these.
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Also submit for review (uncheck to only upload a draft)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build the upload zip
+        run: ./scripts/package.sh
+
+      - name: Find the zip
+        id: zip
+        run: echo "path=$(ls dist/plainly-*.zip)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to the Chrome Web Store
+        run: |
+          npx --yes chrome-webstore-upload-cli@3 upload \
+            --source "${{ steps.zip.outputs.path }}" \
+            --extension-id "$EXTENSION_ID" \
+            --client-id "$CLIENT_ID" \
+            --client-secret "$CLIENT_SECRET" \
+            --refresh-token "$REFRESH_TOKEN"
+        env:
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+      # Submitting for review is a separate step so a manual run can choose
+      # to upload a draft only. Tag pushes always publish.
+      - name: Submit for review
+        if: github.event_name == 'push' || inputs.publish
+        run: |
+          npx --yes chrome-webstore-upload-cli@3 publish \
+            --extension-id "$EXTENSION_ID" \
+            --client-id "$CLIENT_ID" \
+            --client-secret "$CLIENT_SECRET" \
+            --refresh-token "$REFRESH_TOKEN"
+        env:
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}

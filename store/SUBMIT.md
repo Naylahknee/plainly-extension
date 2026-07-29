@@ -125,6 +125,10 @@ When you change the code:
 3. In the dashboard, open the Plainly item → **Package** → **Upload new
    package** → pick the new zip → **Submit for review**.
 
+**Tired of doing that by hand?** Once the item exists, you can automate all
+of step 2–3 so future updates publish just by pushing a version tag. See
+[`AUTO-PUBLISH.md`](AUTO-PUBLISH.md) for the one-time setup.
+
 ---
 
 ## Building the zip
