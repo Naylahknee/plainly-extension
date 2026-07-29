@@ -8,7 +8,7 @@ Everything to paste into the [Chrome Web Store Developer Dashboard](https://chro
 | Field | Value |
 |---|---|
 | Name | Plainly — Plain English for Technical Websites |
-| Summary (≤132 chars) | Translates technical jargon into plain English while you browse. Like Google Translate, but for tech jargon. |
+| Summary (≤132 chars) | Translates technical, money, and health jargon into plain English on any website. Like Google Translate, but for jargon. |
 | Category | Accessibility (alt: Productivity → Tools) |
 | Language | English |
 | Privacy policy URL | https://github.com/Naylahknee/plainly-extension/blob/main/PRIVACY.md |
@@ -16,15 +16,19 @@ Everything to paste into the [Chrome Web Store Developer Dashboard](https://chro
 ## Detailed description
 
 ```
-Plainly is a live translation layer for confusing technical websites.
+Plainly is a live translation layer for confusing jargon — on any website.
 
-Browse GitHub, Vercel, Netlify, Stripe, OpenAI docs, Zapier, and Notion's
-developer docs — and let Plainly quietly underline the jargon. Hover any
-underlined term for a calm, plain-English explanation: what it means, why
-it matters, and what to do next.
+Land on a page full of terms you don't know — a developer tool, a bank
+statement, an insurance plan, a contract — and let Plainly quietly underline
+the jargon. Hover any underlined term for a calm, plain-English explanation:
+what it means, why it matters, and what to do next.
 
 WHAT YOU GET
-• Live jargon translation — gentle dotted underlines, nothing breaks
+• Live jargon translation on any site — gentle dotted underlines, nothing
+  breaks
+• Four knowledge packs — Tech & developer tools, Money & banking, Health &
+  insurance, and Legal & contracts — that switch automatically to match the
+  site you're on
 • Hover tooltips — keyboard accessible, dark-mode aware
 • Side panel explainer — page summary, what the page is asking you to do,
   step-by-step next actions, and a risk level
@@ -43,14 +47,30 @@ We only translate text you interact with. We do not sell browsing data.
 No analytics, no tracking, no servers. Plainly never reads anything you
 type — inputs and password fields are explicitly skipped.
 
-Plainly is not a coding course. It's cognitive accessibility for technical
-systems — because not understanding a system shouldn't lock you out of it.
+Plainly is not a course. It's cognitive accessibility for complex systems —
+because not understanding a system shouldn't lock you out of it.
 ```
 
 ## Single-purpose statement
 
-> Plainly's single purpose is translating technical jargon on web pages
-> into plain English for non-technical users.
+> Plainly's single purpose is translating jargon on web pages — technical,
+> financial, health-insurance, and legal — into plain English for
+> non-technical users.
+
+## Note on broad host permissions
+
+Because Plainly requests all-site host access (`https://*/*`, `http://*/*`),
+Chrome routes it to **manual review**, which is slower (often 1–3 weeks) and
+stricter. Two things make it pass cleanly:
+- The **single-purpose statement** and the **host-permission justification**
+  above both tie the broad access directly to the one purpose (translating
+  jargon wherever it appears).
+- The **data disclosures** truthfully declare no data collection. Keep them
+  consistent — a mismatch here is the most common rejection reason.
+
+If review friction is a concern, an alternative is to ship with the original
+curated site list plus an "Add this site" button (activeTab-based) — but the
+all-site build is legitimate and reviewable as written.
 
 ## Permission justifications
 
@@ -60,7 +80,7 @@ systems — because not understanding a system shouldn't lock you out of it.
 | `activeTab` | Lets the popup communicate with the page the user is currently viewing to translate it on demand. |
 | `contextMenus` | Adds the right-click "Translate into Plainly" option for selected text. |
 | `sidePanel` | Hosts the page explainer panel (summary, jargon definitions, next steps, risk level). |
-| Host permissions (9 listed sites) | The content script underlines jargon only on these technical sites the extension is built for; it runs nowhere else. |
+| Host permissions (`http://*/*`, `https://*/*` — all sites) | Jargon that confuses non-technical users appears on any website — a bank statement, an insurance plan, a developer tool, a contract. The content script reads only visible page text to underline known glossary terms and show plain-English tooltips. It never reads form fields, inputs, or passwords, sends nothing off the device, and modifies the page only if the user turns on Replace Mode. Broad host access is required because the whole point is to help wherever jargon appears, not on a fixed list of sites. |
 | Optional host permissions (AI APIs + localhost) | Requested only if and when the user connects an AI provider in settings; used solely to send the user's explicit translation requests to the provider they chose. |
 | Remote code | None. All code is packaged in the extension. |
 
