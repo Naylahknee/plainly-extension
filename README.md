@@ -4,9 +4,10 @@
 Think: *Google Translate, but for tech jargon.*
 
 Plainly is a Chrome extension that translates technical jargon into plain
-English while you browse sites like GitHub, Vercel, Netlify, Stripe, OpenAI
-docs, and Zapier. It's not a coding tutor — it's cognitive accessibility:
-understand what you're looking at, what a button does, and what to do next.
+English while you browse **any website** — from GitHub, Vercel, Netlify,
+Stripe, and OpenAI docs to any random jargon-heavy page you land on. It's not
+a coding tutor — it's cognitive accessibility: understand what you're looking
+at, what a button does, and what to do next.
 
 | You see | Plainly says |
 |---|---|
@@ -79,8 +80,10 @@ name-like terms (JSON, API…) that should be explained but never rewritten.
 > We only translate text you interact with. We do not sell browsing data.
 
 Translation is local; the scanner never reads inputs, passwords, or anything
-you type; no analytics, no tracking. Permissions are minimal: storage,
-activeTab, contextMenus, sidePanel, and host access to the ~9 supported sites.
+you type; no analytics, no tracking. Permissions: storage, activeTab,
+contextMenus, sidePanel, and host access to the pages you visit (so terms can
+be underlined in place). Nothing is ever sent off-device unless you opt into
+AI and explicitly ask for a deeper explanation.
 
 ## Publishing
 
