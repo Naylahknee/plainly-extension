@@ -58,6 +58,39 @@ body {
 .app-header h1 { margin: 0; font-size: 24px; letter-spacing: -0.01em; }
 .tagline { margin: 0; color: var(--ink-soft); font-size: 14px; }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.install-btn {
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.install-btn:hover { filter: brightness(1.08); }
+
+.install-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 8px 10px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.install-link:hover { background: rgba(0, 0, 0, 0.04); }
+
 /* Domain picker sits at the end of the header; don't let it stretch. */
 .domain-select { flex: 0 0 auto; min-width: 150px; }
 

@@ -34,6 +34,12 @@
    *  PAGE EXPLAINER
    * ==================================================================== */
 
+  /** URL of the current tab, so translations can auto-match its domain. */
+  async function activeTabUrl() {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    return tab?.url || "";
+  }
+
   /** Ask the active tab's content script for page info, then render. */
   async function analyzePage() {
     $("page-summary").textContent = "Reading the page…";
@@ -52,6 +58,12 @@
     if (!reply?.ok) return renderUnsupported();
 
     const settings = await storageService.getSettings();
+    // Match the pack the content script is using on this tab (auto-switch:
+    // bank → finance, insurer → health, …) so definitions line up.
+    await glossaryService.loadPacks();
+    await glossaryService.load(
+      glossaryService.resolveDomain(tab.url, settings)
+    );
     const analysis = await translator.summarizePage(reply.pageInfo, settings.mode);
     lastAnalysis = analysis;
     lastPageInfo = reply.pageInfo;
@@ -143,7 +155,9 @@
 
     const settings = await storageService.getSettings();
     lastSelectionText = pending.text;
-    const result = await translator.translateSelection(pending.text, settings.mode);
+    const result = await translator.translateSelection(pending.text, settings.mode, {
+      url: pending.url || (await activeTabUrl()),
+    });
     lastSelectionResult = result;
     await renderSelection(result);
   }
@@ -220,7 +234,7 @@
       const result = await translator.translateSelection(
         lastSelectionText,
         settings.mode,
-        { deeper: true }
+        { deeper: true, url: await activeTabUrl() }
       );
       lastSelectionResult = result;
       await renderSelection(result);

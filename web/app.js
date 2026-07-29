@@ -212,6 +212,36 @@
     storageService.updateSettings({ mode: $("mode-select").value })
   );
 
+  /* ================= INSTALL (PWA) ================= */
+  // Chrome/Edge fire beforeinstallprompt when the app is installable. We
+  // stash the event and reveal our own "Install app" button; clicking it
+  // triggers the native prompt. The "Add to browser ↗" link is always there
+  // as a fallback (and for the browser extension itself).
+  (function setupInstall() {
+    const installBtn = $("btn-install");
+    if (!installBtn) return;
+    let deferredPrompt = null;
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.hidden = false;
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    });
+
+    window.addEventListener("appinstalled", () => {
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    });
+  })();
+
   /* ================= BOOT ================= */
 
   (async () => {

@@ -13,6 +13,8 @@
   const glossarySearch = $("glossary-search");
   const glossaryList = $("glossary-list");
   const domainSelect = $("domain-select");
+  const domainHint = $("domain-hint");
+  const toggleAutoDomain = $("toggle-auto-domain");
   const modeSelect = $("mode-select");
   const toggleReplace = $("toggle-replace");
   const aiProviderSelect = $("ai-provider");
@@ -137,13 +139,42 @@
     }));
     const activeDomain = settings.activeDomain || glossaryService.defaultDomain;
     domainSelect.value = activeDomain;
+    toggleAutoDomain.checked = settings.autoDomain !== false;
     await glossaryService.load(activeDomain);
+    await reflectAutoDomain(settings);
 
     aiProviderSelect.value = settings.aiProvider || "none";
     aiModelInput.value = settings.aiModel || "";
     const keys = await storageService.getAiKeys();
     aiKeyInput.value = keys[settings.aiProvider] || "";
     refreshAiRows();
+  }
+
+  /**
+   * Show, in the popup, which pack the current tab will actually use.
+   * With auto-match on, a recognized site (bank, insurer…) overrides the
+   * picker, which then only serves as the fallback for unrecognized sites.
+   */
+  async function reflectAutoDomain(settings) {
+    const auto = settings.autoDomain !== false;
+    let detected = null;
+    if (auto) {
+      const tab = await activeTab();
+      if (tab?.url) detected = glossaryService.detectDomainForUrl(tab.url);
+    }
+
+    if (auto && detected) {
+      const pack = (glossaryService.packs || []).find((p) => p.id === detected);
+      domainHint.textContent = `Auto-matched to ${pack ? pack.label : detected} on this site`;
+      domainSelect.value = detected;
+      domainSelect.disabled = true;
+    } else if (auto) {
+      domainHint.textContent = "Fallback when a site isn't recognized";
+      domainSelect.disabled = false;
+    } else {
+      domainHint.textContent = "Used when simplifying jargon";
+      domainSelect.disabled = false;
+    }
   }
 
   function refreshAiRows() {
@@ -262,6 +293,18 @@
     await storageService.updateSettings({ activeDomain: domainSelect.value });
     await glossaryService.load(domainSelect.value);
     setStatus("Knowledge domain updated.");
+  });
+
+  toggleAutoDomain.addEventListener("change", async () => {
+    const settings = await storageService.updateSettings({
+      autoDomain: toggleAutoDomain.checked
+    });
+    await reflectAutoDomain(settings);
+    setStatus(
+      toggleAutoDomain.checked
+        ? "Auto-matching the domain to each site."
+        : "Auto-match off — using your chosen domain."
+    );
   });
   modeSelect.addEventListener("change", async () => storageService.updateSettings({ mode: modeSelect.value }));
   toggleReplace.addEventListener("change", async () => storageService.updateSettings({ replaceMode: toggleReplace.checked }));

@@ -45,6 +45,13 @@
   /** Current user settings (kept in sync via storage listener). */
   let settings = null;
 
+  /**
+   * The pack actually in use on THIS page. May differ from
+   * settings.activeDomain when auto-switching matches the site
+   * (e.g. "finance" on a bank site while the saved default is "tech").
+   */
+  let effectiveDomain = null;
+
   /** Count of highlights created so far on this page. */
   let highlightCount = 0;
 
@@ -57,7 +64,12 @@
 
   async function boot() {
     settings = await storageService.getSettings();
-    await glossaryService.load(settings.activeDomain);
+    // Auto-switch: pick the pack that matches this site (bank → finance,
+    // insurance → health, …), falling back to the saved domain when auto
+    // is off or the site isn't recognized.
+    await glossaryService.loadPacks();
+    effectiveDomain = glossaryService.resolveDomain(location.href, settings);
+    await glossaryService.load(effectiveDomain);
 
     if (settings.enabled) {
       scanAndHighlight(document.body);
@@ -68,15 +80,19 @@
     storageService.onSettingsChanged((next) => {
       const wasEnabled = settings.enabled;
       const wasReplace = settings.replaceMode;
-      const wasDomain = settings.activeDomain;
+      const prevDomain = effectiveDomain;
       settings = next;
 
-      if (next.activeDomain !== wasDomain) {
-        // Domain switched: load the new pack, then rebuild highlights so
-        // the page reflects the new vocabulary.
+      const nextDomain = glossaryService.resolveDomain(location.href, next);
+
+      if (nextDomain !== prevDomain) {
+        // Effective pack changed (manual pick, or auto toggled on/off):
+        // load the new pack, then rebuild highlights so the page reflects
+        // the new vocabulary.
+        effectiveDomain = nextDomain;
         (async () => {
           removeAllHighlights();
-          await glossaryService.load(next.activeDomain);
+          await glossaryService.load(effectiveDomain);
           if (next.enabled) scanAndHighlight(document.body);
         })();
         return;

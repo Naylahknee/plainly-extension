@@ -11,6 +11,7 @@
     replaceMode: false,
     tooltipsOnHover: true,
     activeDomain: "tech",
+    autoDomain: true,
     aiProvider: "none",
     aiModel: "",
 

@@ -270,11 +270,17 @@
      * and prompt framing all match the chosen domain (tech, legal, ...).
      * @returns {Promise<{domain: string, pack: object, domainLabel: string}>}
      */
-    async activeContext() {
+    async activeContext(url) {
       const settings = await Plainly.storageService.getSettings();
       const glossary = Plainly.glossaryService;
       await glossary.loadPacks();
-      const domain = settings.activeDomain || glossary.defaultDomain || "tech";
+      // Honor auto-switch when a page URL is known (bank → finance, …);
+      // resolveDomain falls back to the saved activeDomain otherwise.
+      const domain =
+        glossary.resolveDomain(url, settings) ||
+        settings.activeDomain ||
+        glossary.defaultDomain ||
+        "tech";
       const pack = glossary.getPack(domain) || {};
       return {
         domain,
@@ -317,7 +323,7 @@
      */
     async translateSelection(text, mode = "beginner", opts = {}) {
       const glossary = Plainly.glossaryService;
-      const { domain, domainLabel } = await this.activeContext();
+      const { domain, domainLabel } = await this.activeContext(opts.url);
       await glossary.load(domain);
 
       const terms = glossary.uniqueTerms(text);
@@ -419,7 +425,7 @@
      */
     async summarizePage(pageInfo, mode = "beginner") {
       const glossary = Plainly.glossaryService;
-      const { domain, pack } = await this.activeContext();
+      const { domain, pack } = await this.activeContext(pageInfo.url);
       await glossary.load(domain);
 
       const allText = [

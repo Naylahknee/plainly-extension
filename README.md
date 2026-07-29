@@ -57,6 +57,12 @@ Plainly is multi-domain. Each knowledge area is a **pack** listed in
 and a `packs.json` entry — the engine, UI, and AI prompts pick it up with no
 code changes.
 
+**Auto-match** (on by default) picks the right pack for the site you're on
+using each pack's `sitePatterns` — a bank switches to **Money & banking**, a
+patient portal to **Health & insurance** — and falls back to your chosen
+domain on unrecognized sites. Turn it off in the popup to always use one
+domain.
+
 Every translation returns the same labeled structure (`PlainlyResult`),
 exportable with **Copy as JSON** — see [`SCHEMA.md`](SCHEMA.md) for the
 glossary-entry and output schemas.

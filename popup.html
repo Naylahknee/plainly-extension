@@ -104,9 +104,17 @@
     <summary class="section-heading">Settings</summary>
 
     <div class="setting-row">
+      <label class="setting-label" for="toggle-auto-domain">
+        Auto-match domain to the site
+        <span class="setting-hint">Bank → Money, insurance → Health, etc.</span>
+      </label>
+      <input type="checkbox" id="toggle-auto-domain" />
+    </div>
+
+    <div class="setting-row">
       <label for="domain-select" class="setting-label">
         Knowledge domain
-        <span class="setting-hint">Used when simplifying jargon</span>
+        <span class="setting-hint" id="domain-hint">Used when simplifying jargon</span>
       </label>
       <select id="domain-select" class="setting-select"></select>
     </div>

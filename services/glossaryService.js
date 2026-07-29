@@ -79,6 +79,38 @@
     },
 
     /**
+     * Pick the best pack for a page URL using each pack's `sitePatterns`.
+     * Returns the matching pack id (e.g. "finance" on a bank site), or
+     * null when no pack claims the site. Requires the manifest to be
+     * loaded first (call loadPacks/listPacks before this).
+     */
+    detectDomainForUrl(url) {
+      if (!url || !this.packs) return null;
+      const haystack = String(url).toLowerCase();
+      for (const pack of this.packs) {
+        for (const sp of pack.sitePatterns || []) {
+          if (sp && sp.match && haystack.includes(String(sp.match).toLowerCase())) {
+            return pack.id;
+          }
+        }
+      }
+      return null;
+    },
+
+    /**
+     * Resolve which pack a page should actually use, honoring the user's
+     * `autoDomain` preference: when auto is on, a site match wins and the
+     * saved `activeDomain` is the fallback for unrecognized sites; when
+     * auto is off, the saved `activeDomain` always wins.
+     */
+    resolveDomain(url, settings) {
+      const fallback =
+        (settings && settings.activeDomain) || this.defaultDomain;
+      if (settings && settings.autoDomain === false) return fallback;
+      return this.detectDomainForUrl(url) || fallback;
+    },
+
+    /**
      * Load a domain's glossary and build the lookup indexes.
      * Re-calling with the same domain is a no-op; switching domains rebuilds.
      * @param {string} domain - pack id, e.g. "tech" or "legal"
