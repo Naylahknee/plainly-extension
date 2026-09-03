@@ -16,12 +16,18 @@ at, what a button does, and what to do next.
 | Deploy | publish it online |
 | Build failed | the site/app could not finish preparing |
 
-## Install (unpacked)
+## Install Plainly
 
-1. Download or clone this repo.
-2. Go to `chrome://extensions`, turn on **Developer mode**.
-3. Click **Load unpacked** and select this folder.
-4. Pin Plainly to your toolbar, then visit any GitHub page.
+[**Download Plainly for Chrome (.zip)**](https://github.com/Naylahknee/plainly-extension/archive/refs/heads/claude/serene-euler-9hzdf3.zip)
+
+No Git or cloning required.
+
+1. Click the download link above, then unzip the downloaded folder.
+2. In Chrome, open `chrome://extensions` and turn on **Developer mode**.
+3. Click **Load unpacked** and select the unzipped `plainly-extension-claude-serene-euler-9hzdf3` folder.
+4. Pin Plainly to your toolbar.
+
+> Chrome only allows true one-click installation through the Chrome Web Store. Until Plainly is published there, Chrome requires the one-time **Load unpacked** step.
 
 After code changes: hit ↻ on Plainly's card in `chrome://extensions` and reload the page.
 
