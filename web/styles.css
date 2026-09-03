@@ -58,8 +58,28 @@ body {
 .app-header h1 { margin: 0; font-size: 24px; letter-spacing: -0.01em; }
 .tagline { margin: 0; color: var(--ink-soft); font-size: 14px; }
 
+.download-btn {
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.download-btn:hover { filter: brightness(1.08); }
+.download-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
 /* Domain picker sits at the end of the header; don't let it stretch. */
 .domain-select { flex: 0 0 auto; min-width: 150px; }
+
+@media (max-width: 640px) {
+  .app-header { flex-wrap: wrap; }
+  .download-btn { order: 3; flex: 1; text-align: center; }
+  .domain-select { order: 4; flex: 1; }
+}
 
 .app-main {
   max-width: 680px;
