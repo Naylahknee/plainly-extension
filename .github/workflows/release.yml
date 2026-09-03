@@ -1,0 +1,38 @@
+name: Build Plainly release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Build Chrome extension ZIP
+        run: bash scripts/package.sh
+
+      - name: Read extension version
+        id: version
+        run: echo "value=$(node -p \"require('./manifest.json').version\")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: plainly-${{ steps.version.outputs.value }}
+          path: dist/plainly-${{ steps.version.outputs.value }}.zip
+          if-no-files-found: error
+
+      - name: Attach ZIP to GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/plainly-${{ steps.version.outputs.value }}.zip
+          generate_release_notes: true
